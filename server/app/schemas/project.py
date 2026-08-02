@@ -3,13 +3,18 @@ from typing import Optional, List
 from datetime import datetime
 
 class ProjectBase(BaseModel):
-    title: str
+    title: str = ""
     slug: str
-    description: str
+    category: str = "Backend"
+    status: str = "Completed"
+    description: str = ""
     content: Optional[str] = None
     icon: Optional[str] = None
     domains: List[str] = []
     technologies: List[str] = []
+    outcome: Optional[str] = None
+    challenge: Optional[str] = None
+    learning: Optional[str] = None
     github_url: Optional[str] = None
     live_url: Optional[str] = None
 

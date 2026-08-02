@@ -1,4 +1,25 @@
-export default function Home() {
+async function getGithubStats() {
+  try {
+    const res = await fetch('http://server:8000/github/stats', {
+      next: { revalidate: 3600 }
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch (err) {
+    console.error("Error fetching github stats:", err);
+    return null;
+  }
+}
+
+export default async function Home() {
+  const stats = await getGithubStats() || {
+    public_repos: 36,
+    total_stars: 84,
+    activity_score: 4.8,
+    streak_days: 127,
+    prs_merged: 48
+  };
+
   return (
     <>
 
@@ -43,7 +64,7 @@ export default function Home() {
                   <div className="text-xs text-gray-500 leading-tight">Years Coding</div>
                 </div>
                 <div className="border-2 border-black rounded-xl p-2 text-center bg-gray-100">
-                  <div className="text-lg font-black">36</div>
+                  <div className="text-lg font-black">{stats.public_repos}</div>
                   <div className="text-xs text-gray-500 leading-tight">Repos</div>
                 </div>
                 <div className="border-2 border-black rounded-xl p-2 text-center bg-gray-100">
@@ -152,7 +173,7 @@ export default function Home() {
               <p className="text-xs text-gray-400">Activity Score</p>
             </div>
           </div>
-          <div className="text-3xl font-black mb-0.5">36</div>
+          <div className="text-3xl font-black mb-0.5">{stats.public_repos}</div>
           <p className="text-xs text-gray-400 mb-4">public repositories</p>
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between text-xs border-t border-gray-100 pt-2">
@@ -161,11 +182,11 @@ export default function Home() {
             </div>
             <div className="flex items-center justify-between text-xs border-t border-gray-100 pt-2">
               <span className="text-gray-500 font-medium">Streak</span>
-              <span className="font-black">127 days</span>
+              <span className="font-black">{stats.streak_days} days</span>
             </div>
             <div className="flex items-center justify-between text-xs border-t border-gray-100 pt-2">
               <span className="text-gray-500 font-medium">PRs Merged</span>
-              <span className="font-black">48</span>
+              <span className="font-black">{stats.prs_merged}</span>
             </div>
           </div>
         </div>
@@ -207,7 +228,7 @@ export default function Home() {
               </div>
               <div>
                 <div className="text-xs font-black">Streak</div>
-                <div className="text-xs text-gray-400">127 days</div>
+                <div className="text-xs text-gray-400">{stats.streak_days} days</div>
               </div>
             </div>
             <div className="flex-1 border-2 border-black rounded-xl p-2 flex items-center gap-2 bg-gray-50">
@@ -216,7 +237,7 @@ export default function Home() {
               </div>
               <div>
                 <div className="text-xs font-black">Stars</div>
-                <div className="text-xs text-gray-400">84 total</div>
+                <div className="text-xs text-gray-400">{stats.total_stars} total</div>
               </div>
             </div>
           </div>

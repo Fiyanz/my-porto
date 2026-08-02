@@ -5,6 +5,7 @@ from typing import List
 from app.db.session import get_db
 from app.models.project import Project
 from app.schemas.project import ProjectResponse, ProjectCreate, ProjectUpdate
+from app.services.github import fetch_repo_details
 # Will add auth dependency for protected routes later
 
 router = APIRouter()
@@ -22,21 +23,46 @@ def read_project(slug: str, db: Session = Depends(get_db)):
     return project
 
 @router.post("/", response_model=ProjectResponse)
-def create_project(project_in: ProjectCreate, db: Session = Depends(get_db)):
-    project = Project(**project_in.model_dump())
+async def create_project(project_in: ProjectCreate, db: Session = Depends(get_db)):
+    project_data = project_in.model_dump()
+    
+    if project_data.get("github_url"):
+        repo_details = await fetch_repo_details(project_data["github_url"])
+        if repo_details:
+            if not project_data.get("title"):
+                project_data["title"] = repo_details["title"]
+            if not project_data.get("description"):
+                project_data["description"] = repo_details["description"]
+            if not project_data.get("technologies") and repo_details.get("language"):
+                project_data["technologies"] = [repo_details["language"]]
+
+    project = Project(**project_data)
     db.add(project)
     db.commit()
     db.refresh(project)
     return project
 
 @router.put("/{slug}", response_model=ProjectResponse)
-def update_project(slug: str, project_in: ProjectUpdate, db: Session = Depends(get_db)):
+async def update_project(slug: str, project_in: ProjectUpdate, db: Session = Depends(get_db)):
     project = db.query(Project).filter(Project.slug == slug).first()
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
+        
     update_data = project_in.model_dump(exclude_unset=True)
+    
+    if update_data.get("github_url"):
+        repo_details = await fetch_repo_details(update_data["github_url"])
+        if repo_details:
+            if not update_data.get("title") and not project.title:
+                update_data["title"] = repo_details["title"]
+            if not update_data.get("description") and not project.description:
+                update_data["description"] = repo_details["description"]
+            if not update_data.get("technologies") and not project.technologies and repo_details.get("language"):
+                update_data["technologies"] = [repo_details["language"]]
+                
     for field, value in update_data.items():
         setattr(project, field, value)
+        
     db.add(project)
     db.commit()
     db.refresh(project)
