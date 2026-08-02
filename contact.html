@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest'
+        };
+      </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    * { font-family: 'Inter', sans-serif; border-radius: 0 !important; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* availability pulse */
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .pulse-dot { animation: pulse 2s infinite; }
+
+    /* Kitty */
+    #kitty-window { position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:640px;background:#1a1b26;border:2px solid #3b3d57;box-shadow:0 24px 64px rgba(0,0,0,0.6);z-index:9999;display:none; }
+    #kitty-window.open { display:block; }
+    .kitty-titlebar { background:#16172a;border-bottom:2px solid #3b3d57;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;user-select:none;cursor:move; }
+    .kitty-dots { display:flex;gap:7px;align-items:center; }
+    .kitty-dot { width:13px;height:13px;border:1.5px solid rgba(0,0,0,0.3);cursor:pointer; }
+    .dot-red { background:#ff5f57; } .dot-yellow { background:#febc2e; } .dot-green { background:#28c840; }
+    .kitty-title { font-family:'JetBrains Mono',monospace;font-size:12px;color:#a9b1d6;position:absolute;left:50%;transform:translateX(-50%); }
+    .kitty-reset { font-family:'JetBrains Mono',monospace;font-size:11px;color:#a9b1d6;border:1px solid #3b3d57;background:transparent;padding:2px 10px;cursor:pointer; }
+    .kitty-reset:hover { background:#2a2b3d; }
+    .kitty-body { padding:16px 20px;min-height:340px;background:#1a1b26;overflow-y:auto;max-height:440px; }
+    .kitty-tip { background:#2a2b3d;border-left:3px solid #febc2e;padding:8px 12px;margin-bottom:14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#e0af68; }
+    .kitty-tip a { color:#7dcfff;text-decoration:underline;cursor:pointer; }
+    .term-line { font-family:'JetBrains Mono',monospace;font-size:12px;color:#a9b1d6;line-height:1.7;white-space:pre; }
+    .term-prompt { color:#7aa2f7;font-weight:700; } .term-cmd { color:#c0caf5; }
+    .term-label { color:#7dcfff; } .term-value { color:#9ece6a; }
+    .kitty-inputbar { border-top:2px solid #3b3d57;background:#16172a;display:flex;align-items:center;padding:8px 14px;gap:8px; }
+    .kitty-inputbar span { font-family:'JetBrains Mono',monospace;font-size:12px;color:#7aa2f7;font-weight:700;white-space:nowrap; }
+    .kitty-inputbar input { flex:1;background:transparent;border:none;outline:none;font-family:'JetBrains Mono',monospace;font-size:12px;color:#c0caf5;caret-color:#7aa2f7; }
+    .kitty-send { background:#2a2b3d;border:1px solid #3b3d57;color:#7aa2f7;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0; }
+    .kitty-send:hover { background:#3b3d57; }
+    #kitty-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:9998;display:none; }
+    #kitty-overlay.open { display:block; }
+
+    /* form focus */
+    .form-input:focus { outline: 2px solid #111; outline-offset: 0; }
+  </style>
+</head>
+<body class="bg-white text-gray-900">
+
+<div id="app-shell" class="flex min-h-[900px]">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar" class="w-52 border-r-2 border-black bg-white flex flex-col py-6 px-4 shrink-0">
+    <div class="flex items-center gap-2 mb-10 border-2 border-black px-3 py-2">
+      <div class="w-7 h-7 bg-gray-800 flex items-center justify-center text-white text-xs font-bold">&lt;/&gt;</div>
+      <span class="font-black text-lg tracking-tight">PORTO</span>
+    </div>
+    <nav class="flex flex-col gap-1 flex-1">
+      <div class="flex items-center gap-3 px-3 py-2 hover:bg-gray-100 font-medium text-sm text-gray-600 cursor-pointer">
+        <i class="fa-solid fa-house text-xs"></i><span>Home</span>
+      </div>
+      <div class="flex items-center gap-3 px-3 py-2 hover:bg-gray-100 font-medium text-sm text-gray-600 cursor-pointer">
+        <i class="fa-solid fa-folder-open text-xs"></i><span>Projects</span>
+      </div>
+      <div class="flex items-center gap-3 px-3 py-2 hover:bg-gray-100 font-medium text-sm text-gray-600 cursor-pointer">
+        <i class="fa-solid fa-code text-xs"></i><span>Skills</span>
+      </div>
+      <div class="flex items-center gap-3 px-3 py-2 hover:bg-gray-100 font-medium text-sm text-gray-600 cursor-pointer">
+        <i class="fa-solid fa-briefcase text-xs"></i><span>Experience</span>
+      </div>
+      <div class="flex items-center gap-3 px-3 py-2 bg-gray-900 text-white font-semibold text-sm cursor-pointer">
+        <i class="fa-solid fa-envelope text-xs"></i><span>Contact</span>
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3 px-3 py-2 hover:bg-gray-100 font-medium text-sm text-gray-500 cursor-pointer">
+        <i class="fa-solid fa-moon text-xs"></i><span>Dark Mode</span>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="flex-1 bg-gray-50 p-6 overflow-y-auto">
+
+    <!-- Topbar -->
+    <header class="flex items-center justify-between mb-6">
+      <button class="w-8 h-8 border-2 border-black flex items-center justify-center bg-white">
+        <i class="fa-solid fa-arrow-left text-xs"></i>
+      </button>
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 border-2 border-black px-3 py-1.5 bg-white w-56">
+          <i class="fa-solid fa-magnifying-glass text-gray-400 text-xs"></i>
+          <span class="text-xs text-gray-400">Search projects, skills…</span>
+        </div>
+        <button class="w-8 h-8 border-2 border-black flex items-center justify-center bg-white">
+          <i class="fa-solid fa-bell text-xs"></i>
+        </button>
+        <div class="w-8 h-8 border-2 border-black overflow-hidden">
+          <img src="https://api.dicebear.com/7.x/notionists/svg?scale=200&seed=42" class="w-full h-full object-cover" />
+        </div>
+      </div>
+    </header>
+
+    <!-- Page heading -->
+    <div class="flex items-end justify-between mb-5">
+      <div>
+        <h1 class="text-3xl font-black tracking-tight">Get In Touch</h1>
+        <p class="text-sm text-gray-500 mt-1">Open to internships, collaborations, and interesting side projects.</p>
+      </div>
+      <!-- Availability badge -->
+      <div class="flex items-center gap-2 border-2 border-black bg-white px-4 py-2">
+        <div class="w-2.5 h-2.5 bg-gray-800 pulse-dot"></div>
+        <span class="text-xs font-black">Available for Internship</span>
+      </div>
+    </div>
+
+    <!-- ── MAIN GRID ── -->
+    <div class="grid grid-cols-3 gap-5">
+
+      <!-- LEFT: Contact form + channels (2 cols) -->
+      <div class="col-span-2 flex flex-col gap-4">
+
+        <!-- Contact channels -->
+        <div id="channels-row" class="grid grid-cols-2 gap-3">
+
+          <!-- GitHub -->
+          <div class="border-2 border-black bg-white p-4 flex items-center gap-3 group cursor-pointer hover:bg-gray-50">
+            <div class="w-10 h-10 bg-gray-900 border-2 border-black flex items-center justify-center shrink-0">
+              <i class="fa-brands fa-github text-white text-lg"></i>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs text-gray-500 font-medium">GitHub</div>
+              <div class="text-sm font-black">@bagusalfiyan</div>
+              <div class="text-xs text-gray-400 mono mt-0.5">36 repos · 84 stars</div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square text-xs text-gray-400"></i>
+          </div>
+
+          <!-- LinkedIn -->
+          <div class="border-2 border-black bg-white p-4 flex items-center gap-3 cursor-pointer hover:bg-gray-50">
+            <div class="w-10 h-10 bg-gray-700 border-2 border-black flex items-center justify-center shrink-0">
+              <i class="fa-brands fa-linkedin text-white text-lg"></i>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs text-gray-500 font-medium">LinkedIn</div>
+              <div class="text-sm font-black">Bagus Alfiyan Yusuf</div>
+              <div class="text-xs text-gray-400 mono mt-0.5">Fastest response</div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square text-xs text-gray-400"></i>
+          </div>
+
+          <!-- Email -->
+          <div class="border-2 border-black bg-white p-4 flex items-center gap-3 cursor-pointer hover:bg-gray-50">
+            <div class="w-10 h-10 bg-gray-500 border-2 border-black flex items-center justify-center shrink-0">
+              <i class="fa-solid fa-envelope text-white text-lg"></i>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs text-gray-500 font-medium">Email</div>
+              <div class="text-sm font-black">bagus@example.com</div>
+              <div class="text-xs text-gray-400 mono mt-0.5">Reply within 24h</div>
+            </div>
+            <i class="fa-solid fa-copy text-xs text-gray-400"></i>
+          </div>
+
+          <!-- Medium -->
+          <div class="border-2 border-black bg-white p-4 flex items-center gap-3 cursor-pointer hover:bg-gray-50">
+            <div class="w-10 h-10 bg-gray-300 border-2 border-black flex items-center justify-center shrink-0">
+              <i class="fa-brands fa-medium text-gray-900 text-lg"></i>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs text-gray-500 font-medium">Medium</div>
+              <div class="text-sm font-black">@bagusalfiyan</div>
+              <div class="text-xs text-gray-400 mono mt-0.5">Dev articles & notes</div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square text-xs text-gray-400"></i>
+          </div>
+
+        </div>
+
+        <!-- Contact form -->
+        <div id="contact-form" class="border-2 border-black bg-white p-5">
+          <h3 class="font-black text-sm mb-4 flex items-center gap-2 border-b-2 border-black pb-3">
+            <i class="fa-solid fa-paper-plane text-gray-500"></i>
+            Send a Message
+          </h3>
+
+          <div class="grid grid-cols-2 gap-3 mb-3">
+            <div>
+              <label class="text-xs font-bold text-gray-600 block mb-1">Name</label>
+              <input class="form-input w-full border-2 border-black bg-gray-50 px-3 py-2 text-sm" placeholder="Your name" />
+            </div>
+            <div>
+              <label class="text-xs font-bold text-gray-600 block mb-1">Email</label>
+              <input class="form-input w-full border-2 border-black bg-gray-50 px-3 py-2 text-sm" placeholder="your@email.com" />
+            </div>
+          </div>
+
+          <!-- Purpose toggle -->
+          <div class="mb-3">
+            <label class="text-xs font-bold text-gray-600 block mb-1">Purpose</label>
+            <div class="flex border-2 border-black overflow-hidden text-xs font-bold" id="purpose-toggle">
+              <button class="flex-1 py-2 bg-gray-900 text-white text-center" onclick="setPurpose(this)">Internship</button>
+              <button class="flex-1 py-2 bg-white text-center border-l-2 border-black" onclick="setPurpose(this)">Collaboration</button>
+              <button class="flex-1 py-2 bg-white text-center border-l-2 border-black" onclick="setPurpose(this)">Just Saying Hi</button>
+              <button class="flex-1 py-2 bg-white text-center border-l-2 border-black" onclick="setPurpose(this)">Other</button>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="text-xs font-bold text-gray-600 block mb-1">Message</label>
+            <textarea class="form-input w-full border-2 border-black bg-gray-50 px-3 py-2 text-sm h-28 resize-none" placeholder="What's on your mind? Tell me about the role, project, or just say hi."></textarea>
+          </div>
+
+          <!-- Terminal-style submit -->
+          <div class="flex items-center gap-3">
+            <button onclick="submitForm()" id="submit-btn" class="flex items-center gap-2 bg-gray-900 text-white px-5 py-2.5 text-sm font-bold border-2 border-black hover:bg-gray-700">
+              <span class="mono text-gray-400 text-xs">$</span>
+              <span>send message</span>
+              <i class="fa-solid fa-paper-plane text-xs"></i>
+            </button>
+            <span class="text-xs text-gray-400 mono" id="form-status"></span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Info sidebar (1 col) -->
+      <div class="flex flex-col gap-4">
+
+        <!-- Availability card -->
+        <div id="availability-card" class="border-2 border-black bg-white p-4">
+          <h3 class="font-black text-sm mb-3 border-b-2 border-black pb-2">Availability</h3>
+          <div class="flex flex-col gap-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-gray-600 font-medium">Internship</span>
+              <div class="flex items-center gap-1.5">
+                <div class="w-2 h-2 bg-gray-800 pulse-dot"></div>
+                <span class="text-xs font-black">Open</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between border-t border-gray-100 pt-2">
+              <span class="text-xs text-gray-600 font-medium">Freelance</span>
+              <div class="flex items-center gap-1.5">
+                <div class="w-2 h-2 bg-gray-400"></div>
+                <span class="text-xs font-bold text-gray-500">Limited</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between border-t border-gray-100 pt-2">
+              <span class="text-xs text-gray-600 font-medium">Open Source</span>
+              <div class="flex items-center gap-1.5">
+                <div class="w-2 h-2 bg-gray-800 pulse-dot"></div>
+                <span class="text-xs font-black">Always</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between border-t border-gray-100 pt-2">
+              <span class="text-xs text-gray-600 font-medium">Full-time</span>
+              <div class="flex items-center gap-1.5">
+                <div class="w-2 h-2 bg-gray-300"></div>
+                <span class="text-xs font-bold text-gray-400">After S1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick links -->
+        <div id="quick-links" class="border-2 border-black bg-white p-4">
+          <h3 class="font-black text-sm mb-3 border-b-2 border-black pb-2">Quick Links</h3>
+          <div class="flex flex-col gap-2">
+            <a class="flex items-center justify-between border-2 border-black px-3 py-2 bg-gray-50 hover:bg-gray-100 cursor-pointer">
+              <span class="text-xs font-bold">Download CV</span>
+              <i class="fa-solid fa-download text-xs"></i>
+            </a>
+            <a class="flex items-center justify-between border-2 border-black px-3 py-2 bg-gray-50 hover:bg-gray-100 cursor-pointer">
+              <span class="text-xs font-bold">GitHub Profile</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+            </a>
+            <a class="flex items-center justify-between border-2 border-black px-3 py-2 bg-gray-50 hover:bg-gray-100 cursor-pointer">
+              <span class="text-xs font-bold">View Projects</span>
+              <i class="fa-solid fa-folder-open text-xs"></i>
+            </a>
+            <a class="flex items-center justify-between border-2 border-black px-3 py-2 bg-gray-50 hover:bg-gray-100 cursor-pointer">
+              <span class="text-xs font-bold">Medium Articles</span>
+              <i class="fa-brands fa-medium text-xs"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Response time card -->
+        <div id="response-card" class="border-2 border-black bg-white p-4">
+          <h3 class="font-black text-sm mb-3 border-b-2 border-black pb-2">Response Time</h3>
+          <div class="space-y-3">
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-gray-500">LinkedIn</span>
+                <span class="font-black">&lt; 4h</span>
+              </div>
+              <div class="w-full h-2 bg-gray-200 border border-gray-300">
+                <div class="h-full bg-gray-800" style="width:90%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-gray-500">Email</span>
+                <span class="font-black">&lt; 24h</span>
+              </div>
+              <div class="w-full h-2 bg-gray-200 border border-gray-300">
+                <div class="h-full bg-gray-600" style="width:70%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-gray-500">This form</span>
+                <span class="font-black">&lt; 48h</span>
+              </div>
+              <div class="w-full h-2 bg-gray-200 border border-gray-300">
+                <div class="h-full bg-gray-400" style="width:55%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fun fact / terminal hint -->
+        <div id="terminal-hint" class="border-2 border-black bg-gray-900 p-4">
+          <div class="mono text-xs text-gray-400 mb-2">
+            <span style="color:#7aa2f7;">bagus@hyprland ~ $</span>
+          </div>
+          <div class="mono text-xs text-gray-300 leading-relaxed">
+            Or just open the Kitty terminal below and type <span style="color:#9ece6a;">'sudo hire'</span> — it's faster 😄
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- end main grid -->
+
+  </main>
+</div>
+
+<!-- Kitty trigger -->
+<button onclick="openKitty()"
+  style="position:fixed;bottom:24px;right:24px;z-index:9997;background:#1a1b26;color:#7aa2f7;border:2px solid #3b3d57;padding:8px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,0.4);">
+  <span style="color:#9ece6a;font-weight:700;">$</span> kitty
+  <span style="color:#a9b1d6;font-size:10px;">(Wayland)</span>
+</button>
+
+<div id="kitty-overlay" onclick="closeKitty()"></div>
+
+<div id="kitty-window">
+  <div class="kitty-titlebar" id="kitty-drag-handle">
+    <div class="kitty-dots">
+      <div class="kitty-dot dot-red" onclick="closeKitty()"></div>
+      <div class="kitty-dot dot-yellow"></div>
+      <div class="kitty-dot dot-green"></div>
+    </div>
+    <span class="kitty-title">&gt;_ kitty ~ bagus@hyprland-rice (Wayland)</span>
+    <button class="kitty-reset" onclick="resetTerm()">Reset</button>
+  </div>
+  <div class="kitty-body" id="kitty-body">
+    <div class="kitty-tip">
+      💡 Try: <a onclick="runCmd('contact')">contact</a>,
+      <a onclick="runCmd('sudo hire')">sudo hire</a>,
+      <a onclick="runCmd('ping bagus')">ping bagus</a>,
+      <a onclick="runCmd('neofetch')">neofetch</a>
+    </div>
+    <div id="term-output"></div>
+  </div>
+  <div class="kitty-inputbar">
+    <span>bagus@hyprland-rice ~ $</span>
+    <input type="text" id="kitty-input" placeholder="type 'help'..."
+      onkeydown="if(event.key==='Enter') sendCmd()" autocomplete="off" spellcheck="false" />
+    <button class="kitty-send" onclick="sendCmd()">
+      <i class="fa-solid fa-paper-plane" style="font-size:11px;"></i>
+    </button>
+  </div>
+</div>
+
+<script>
+  function setPurpose(el) {
+    document.querySelectorAll('#purpose-toggle button').forEach(b => {
+      b.className = 'flex-1 py-2 bg-white text-center border-l-2 border-black';
+    });
+    el.className = 'flex-1 py-2 bg-gray-900 text-white text-center border-l-2 border-black';
+  }
+
+  function submitForm() {
+    const btn = document.getElementById('submit-btn');
+    const status = document.getElementById('form-status');
+    btn.innerHTML = '<span class="mono text-gray-400 text-xs">$</span><span>sending…</span>';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.innerHTML = '<i class="fa-solid fa-check text-xs"></i><span>Sent!</span>';
+      status.textContent = '✓ Message queued — reply within 24h';
+      status.style.color = '#374151';
+    }, 1200);
+  }
+
+  function openKitty() {
+    document.getElementById('kitty-window').classList.add('open');
+    document.getElementById('kitty-overlay').classList.add('open');
+    document.getElementById('kitty-input').focus();
+    if (!document.getElementById('kitty-window').dataset.opened) {
+      document.getElementById('kitty-window').dataset.opened = '1';
+      setTimeout(() => runCmd('contact'), 200);
+    }
+  }
+  function closeKitty() {
+    document.getElementById('kitty-window').classList.remove('open');
+    document.getElementById('kitty-overlay').classList.remove('open');
+  }
+  function resetTerm() { document.getElementById('term-output').innerHTML = ''; }
+  function sendCmd() {
+    const inp = document.getElementById('kitty-input');
+    const val = inp.value.trim(); if (!val) return;
+    appendLine(`<span class="term-prompt">bagus@hyprland-rice ~ $</span> <span class="term-cmd">${val}</span>`);
+    inp.value = ''; runCmd(val.toLowerCase());
+  }
+  function runCmd(cmd) {
+    const c = cmd.toLowerCase().trim();
+    if (c === 'contact') {
+      appendRaw(`<div style="margin:8px 0;">
+        <div class="term-line" style="color:#bb9af7;font-weight:700;">── Contact Info ──</div>
+        <div class="term-line"><span class="term-label">GitHub:   </span><span class="term-value">github.com/bagusalfiyan</span>  <span style="color:#565f89;">36 repos · 84 stars</span></div>
+        <div class="term-line"><span class="term-label">LinkedIn: </span><span class="term-value">linkedin.com/in/bagusalfiyan</span>  <span style="color:#9ece6a;">fastest response</span></div>
+        <div class="term-line"><span class="term-label">Email:    </span><span class="term-value">bagus@example.com</span>  <span style="color:#565f89;">&lt; 24h reply</span></div>
+        <div class="term-line"><span class="term-label">Medium:   </span><span class="term-value">medium.com/@bagusalfiyan</span></div>
+        <div class="term-line" style="color:#e0af68;margin-top:6px;">Status: <span style="color:#9ece6a;">● Available for internship</span></div>
+      </div>`);
+    } else if (c === 'ping bagus' || c === 'ping') {
+      appendRaw(`<div style="margin:8px 0;">
+        <div class="term-line" style="color:#7dcfff;">PING bagus@example.com: 56 data bytes</div>
+        <div class="term-line">64 bytes from bagus: seq=0 time=<span style="color:#9ece6a;">2.1 ms</span></div>
+        <div class="term-line">64 bytes from bagus: seq=1 time=<span style="color:#9ece6a;">1.8 ms</span></div>
+        <div class="term-line">64 bytes from bagus: seq=2 time=<span style="color:#9ece6a;">2.0 ms</span></div>
+        <div class="term-line" style="color:#9ece6a;margin-top:4px;">--- ping statistics ---</div>
+        <div class="term-line">3 packets sent, 3 received, <span style="color:#9ece6a;">0% packet loss</span></div>
+        <div class="term-line" style="color:#e0af68;margin-top:4px;">✓ bagus is online and reachable!</div>
+      </div>`);
+    } else if (c === 'sudo hire' || c === 'hire') {
+      appendRaw(`<div style="margin:8px 0;">
+        <div class="term-line" style="color:#9ece6a;">[sudo] password for bagus: ••••••••</div>
+        <div class="term-line" style="color:#9ece6a;">✓ Authentication successful</div>
+        <div class="term-line" style="color:#7dcfff;margin-top:4px;">Initiating hire sequence…</div>
+        <div class="term-line" style="color:#e0af68;margin-top:6px;">📄 bagus_cv_2026.pdf — downloaded</div>
+        <div class="term-line" style="color:#e0af68;">📬 Notification sent to bagus@example.com</div>
+        <div class="term-line" style="color:#9ece6a;margin-top:6px;">✓ Done! He'll respond within 24h.</div>
+      </div>`);
+    } else if (c === 'neofetch') {
+      appendRaw(`<div style="display:flex;gap:20px;align-items:flex-start;margin:8px 0;">
+        <pre style="color:#bb9af7;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.5">    /\\_/\\
+  ( o.o )
+   &gt; ^ &lt;</pre>
+        <div>
+          <div class="term-line"><span class="term-label">Name:     </span><span class="term-value">Bagus Alfiyan Yusuf</span></div>
+          <div class="term-line"><span class="term-label">Status:   </span><span class="term-value">Available · 6th Semester CS</span></div>
+          <div class="term-line"><span class="term-label">Location: </span><span class="term-value">Indonesia 🇮🇩</span></div>
+          <div class="term-line"><span class="term-label">Contact:  </span><span class="term-value">bagus@example.com</span></div>
+        </div>
+      </div>`);
+    } else if (c === 'help') {
+      appendRaw(`<div style="margin:8px 0;">
+        <div class="term-line" style="color:#bb9af7;font-weight:700;">── Commands ──</div>
+        <div class="term-line"><span class="term-label">contact     </span>Show all contact info</div>
+        <div class="term-line"><span class="term-label">ping bagus  </span>Check if I'm online</div>
+        <div class="term-line"><span class="term-label">sudo hire   </span>Download CV + notify me</div>
+        <div class="term-line"><span class="term-label">neofetch    </span>Profile summary</div>
+        <div class="term-line"><span class="term-label">clear       </span>Clear terminal</div>
+      </div>`);
+    } else if (c === 'clear') {
+      document.getElementById('term-output').innerHTML = ''; return;
+    } else {
+      appendLine(`<span style="color:#f7768e;">bash: ${escHtml(cmd)}: command not found — try 'help'</span>`);
+    }
+    scrollBottom();
+  }
+  function appendLine(html) { const d=document.createElement('div'); d.className='term-line'; d.innerHTML=html; document.getElementById('term-output').appendChild(d); scrollBottom(); }
+  function appendRaw(html) { const w=document.createElement('div'); w.innerHTML=html; document.getElementById('term-output').appendChild(w); scrollBottom(); }
+  function scrollBottom() { const b=document.getElementById('kitty-body'); b.scrollTop=b.scrollHeight; }
+  function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  (function() {
+    const win=document.getElementById('kitty-window'), handle=document.getElementById('kitty-drag-handle');
+    let drag=false, ox=0, oy=0;
+    handle.addEventListener('mousedown', e => { drag=true; const r=win.getBoundingClientRect(); ox=e.clientX-r.left; oy=e.clientY-r.top; win.style.transform='none'; win.style.left=r.left+'px'; win.style.top=r.top+'px'; e.preventDefault(); });
+    document.addEventListener('mousemove', e => { if(!drag) return; win.style.left=(e.clientX-ox)+'px'; win.style.top=(e.clientY-oy)+'px'; });
+    document.addEventListener('mouseup', () => { drag=false; });
+  })();
+</script>
+
+</body>
+</html>

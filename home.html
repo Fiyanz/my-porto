@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest'
+        };
+      </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    * { font-family: 'Inter', sans-serif; border-radius: 0 !important; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Kitty window */
+    #kitty-window {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 640px;
+      background: #1a1b26;
+      border: 2px solid #3b3d57;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+      z-index: 9999;
+      display: none;
+    }
+    #kitty-window.open { display: block; }
+
+    /* title bar */
+    .kitty-titlebar {
+      background: #16172a;
+      border-bottom: 2px solid #3b3d57;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+      cursor: move;
+    }
+    .kitty-dots { display: flex; gap: 7px; align-items: center; }
+    .kitty-dot {
+      width: 13px; height: 13px;
+      border: 1.5px solid rgba(0,0,0,0.3);
+      cursor: pointer;
+    }
+    .dot-red   { background: #ff5f57; }
+    .dot-yellow{ background: #febc2e; }
+    .dot-green { background: #28c840; }
+
+    .kitty-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #a9b1d6;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .kitty-reset {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #a9b1d6;
+      border: 1px solid #3b3d57;
+      background: transparent;
+      padding: 2px 10px;
+      cursor: pointer;
+    }
+    .kitty-reset:hover { background: #2a2b3d; }
+
+    /* terminal body */
+    .kitty-body {
+      padding: 16px 20px;
+      min-height: 340px;
+      background: #1a1b26;
+      overflow-y: auto;
+      max-height: 440px;
+    }
+    .kitty-tip {
+      background: #2a2b3d;
+      border-left: 3px solid #febc2e;
+      padding: 8px 12px;
+      margin-bottom: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #e0af68;
+    }
+    .kitty-tip a { color: #7dcfff; text-decoration: underline; cursor: pointer; }
+    .term-line {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #a9b1d6;
+      line-height: 1.7;
+      white-space: pre;
+    }
+    .term-prompt { color: #7aa2f7; font-weight: 700; }
+    .term-cmd    { color: #c0caf5; }
+    .term-label  { color: #7dcfff; }
+    .term-value  { color: #9ece6a; }
+    .term-ascii  { color: #bb9af7; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.5; }
+    .term-border { border-left: 3px solid #3b3d57; padding-left: 10px; margin: 2px 0; display: block; }
+
+    /* input bar */
+    .kitty-inputbar {
+      border-top: 2px solid #3b3d57;
+      background: #16172a;
+      display: flex;
+      align-items: center;
+      padding: 8px 14px;
+      gap: 8px;
+    }
+    .kitty-inputbar span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #7aa2f7;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .kitty-inputbar input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #c0caf5;
+      caret-color: #7aa2f7;
+    }
+    .kitty-send {
+      background: #2a2b3d;
+      border: 1px solid #3b3d57;
+      color: #7aa2f7;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+    .kitty-send:hover { background: #3b3d57; }
+
+    /* overlay */
+    #kitty-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 9998;
+      display: none;
+    }
+    #kitty-overlay.open { display: block; }
+
+    /* drag */
+    #kitty-window { cursor: default; }
+  </style>
+</head>
+<body class="bg-white text-gray-900">
+
+  <!-- App Shell -->
+  <div id="app-shell" class="flex min-h-[900px]">
+
+    <!-- ── SIDEBAR ── -->
+    <aside id="sidebar" class="w-52 border-r-2 border-black bg-white flex flex-col py-6 px-4 shrink-0">
+
+      <!-- Logo -->
+      <div id="sidebar-logo" class="flex items-center gap-2 mb-10 border-2 border-black rounded-lg px-3 py-2">
+        <div class="w-7 h-7 bg-gray-800 rounded flex items-center justify-center text-white text-xs font-bold">&lt;/&gt;</div>
+        <span class="font-black text-lg tracking-tight">PORTO</span>
+      </div>
+
+      <!-- Nav items -->
+      <nav id="sidebar-nav" class="flex flex-col gap-1 flex-1">
+        <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-gray-900 text-white font-semibold text-sm">
+          <i class="fa-solid fa-house text-xs"></i>
+          <span>Home</span>
+        </div>
+        <div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 font-medium text-sm text-gray-600">
+          <i class="fa-solid fa-folder-open text-xs"></i>
+          <span>Projects</span>
+        </div>
+        <div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 font-medium text-sm text-gray-600">
+          <i class="fa-solid fa-code text-xs"></i>
+          <span>Skills</span>
+        </div>
+        <div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 font-medium text-sm text-gray-600">
+          <i class="fa-solid fa-briefcase text-xs"></i>
+          <span>Experience</span>
+        </div>
+        <div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 font-medium text-sm text-gray-600">
+          <i class="fa-solid fa-envelope text-xs"></i>
+          <span>Contact</span>
+        </div>
+
+        <!-- Spacer -->
+        <div class="flex-1"></div>
+
+        <div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 font-medium text-sm text-gray-500 mt-auto">
+          <i class="fa-solid fa-moon text-xs"></i>
+          <span>Dark Mode</span>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- ── MAIN CONTENT ── -->
+    <main id="main-content" class="flex-1 bg-gray-50 p-6 overflow-y-auto">
+
+      <!-- Topbar -->
+      <header id="topbar" class="flex items-center justify-between mb-6">
+        <button class="w-8 h-8 border-2 border-black rounded-lg flex items-center justify-center bg-white">
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+        </button>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 border-2 border-black rounded-lg px-3 py-1.5 bg-white w-56">
+            <i class="fa-solid fa-magnifying-glass text-gray-400 text-xs"></i>
+            <span class="text-xs text-gray-400">Search projects, skills…</span>
+          </div>
+          <button class="w-8 h-8 border-2 border-black rounded-lg flex items-center justify-center bg-white">
+            <i class="fa-solid fa-bell text-xs"></i>
+          </button>
+          <div class="w-8 h-8 border-2 border-black rounded-full overflow-hidden">
+            <img src="https://api.dicebear.com/7.x/notionists/svg?scale=200&seed=42" class="w-full h-full object-cover" />
+          </div>
+        </div>
+      </header>
+
+      <!-- Page heading -->
+      <h1 id="page-title" class="text-3xl font-black tracking-tight mb-5">Portfolio Overview</h1>
+
+      <!-- ── TOP ROW: Hero Card + Featured Projects ── -->
+      <div id="top-row" class="grid grid-cols-3 gap-4 mb-5">
+
+        <!-- Hero Card (spans 2 cols) -->
+        <div id="hero-card" class="col-span-2 border-2 border-black rounded-2xl bg-white p-5">
+
+          <div class="flex gap-5">
+
+            <!-- Avatar placeholder -->
+            <div class="w-32 h-36 bg-gray-200 rounded-xl border-2 border-black shrink-0 overflow-hidden flex items-end justify-center">
+              <img src="https://api.dicebear.com/7.x/notionists/svg?scale=200&seed=99" class="w-full h-full object-cover" />
+            </div>
+
+            <!-- Info -->
+            <div class="flex-1">
+              <div class="flex items-start justify-between">
+                <div>
+                  <h2 class="text-xl font-black leading-tight">Your Name</h2>
+                  <p class="text-gray-500 text-sm font-medium">your.email@example.com</p>
+                </div>
+                <!-- Social icons -->
+                <div class="flex gap-2">
+                  <div class="w-7 h-7 border-2 border-black rounded-full flex items-center justify-center bg-gray-100">
+                    <i class="fa-brands fa-github text-xs"></i>
+                  </div>
+                  <div class="w-7 h-7 border-2 border-black rounded-full flex items-center justify-center bg-gray-100">
+                    <i class="fa-brands fa-linkedin text-xs"></i>
+                  </div>
+                  <div class="w-7 h-7 border-2 border-black rounded-full flex items-center justify-center bg-gray-100">
+                    <i class="fa-solid fa-envelope text-xs"></i>
+                  </div>
+                  <div class="w-7 h-7 border-2 border-black rounded-full flex items-center justify-center bg-gray-100">
+                    <i class="fa-brands fa-medium text-xs"></i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Stat boxes -->
+              <div class="grid grid-cols-4 gap-2 mt-3">
+                <div class="border-2 border-black rounded-xl p-2 text-center bg-gray-100">
+                  <div class="text-lg font-black">6th</div>
+                  <div class="text-xs text-gray-500 leading-tight">Semester</div>
+                </div>
+                <div class="border-2 border-black rounded-xl p-2 text-center bg-gray-100">
+                  <div class="text-lg font-black">3+</div>
+                  <div class="text-xs text-gray-500 leading-tight">Years Coding</div>
+                </div>
+                <div class="border-2 border-black rounded-xl p-2 text-center bg-gray-100">
+                  <div class="text-lg font-black">36</div>
+                  <div class="text-xs text-gray-500 leading-tight">Repos</div>
+                </div>
+                <div class="border-2 border-black rounded-xl p-2 text-center bg-gray-100">
+                  <div class="text-lg font-black">5</div>
+                  <div class="text-xs text-gray-500 leading-tight">Domains</div>
+                </div>
+              </div>
+
+              <!-- Bio -->
+              <p class="text-xs text-gray-500 mt-3 leading-relaxed">
+                CS student building at the intersection of ML, Backend, IoT, and Web3. Passionate about deeply understanding systems before shipping them.
+              </p>
+
+              <!-- CTA buttons -->
+              <div class="flex gap-2 mt-3">
+                <button class="flex items-center gap-2 bg-gray-900 text-white text-xs font-bold px-4 py-2 rounded-lg border-2 border-black">
+                  <i class="fa-solid fa-download"></i>
+                  Download CV
+                </button>
+                <button class="flex items-center gap-2 bg-white text-xs font-bold px-4 py-2 rounded-lg border-2 border-black">
+                  <i class="fa-solid fa-layer-group"></i>
+                  View Projects
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Domain Tags Card (1 col) -->
+        <div id="domains-card" class="border-2 border-black rounded-2xl bg-white p-4 flex flex-col gap-3">
+          <h3 class="font-black text-sm uppercase tracking-wider text-gray-400">Domains</h3>
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center gap-2 border-2 border-black rounded-xl px-3 py-2 bg-gray-100">
+              <i class="fa-solid fa-brain text-sm"></i>
+              <span class="text-xs font-bold">Machine Learning</span>
+            </div>
+            <div class="flex items-center gap-2 border-2 border-black rounded-xl px-3 py-2 bg-gray-100">
+              <i class="fa-solid fa-server text-sm"></i>
+              <span class="text-xs font-bold">Backend / API</span>
+            </div>
+            <div class="flex items-center gap-2 border-2 border-black rounded-xl px-3 py-2 bg-gray-100">
+              <i class="fa-solid fa-microchip text-sm"></i>
+              <span class="text-xs font-bold">IoT / Embedded</span>
+            </div>
+            <div class="flex items-center gap-2 border-2 border-black rounded-xl px-3 py-2 bg-gray-100">
+              <i class="fa-solid fa-mobile-screen text-sm"></i>
+              <span class="text-xs font-bold">Mobile</span>
+            </div>
+            <div class="flex items-center gap-2 border-2 border-black rounded-xl px-3 py-2 bg-gray-100">
+              <i class="fa-solid fa-cube text-sm"></i>
+              <span class="text-xs font-bold">Web3</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SECTION HEADING: Featured Projects ── -->
+      <div id="projects-heading" class="flex items-center justify-between mb-3">
+        <h2 class="text-xl font-black">Featured Projects</h2>
+        <button class="text-xs font-semibold border-2 border-black px-3 py-1.5 rounded-lg bg-white">View all</button>
+      </div>
+
+      <!-- ── PROJECT CARDS ROW ── -->
+      <div id="project-cards" class="grid grid-cols-3 gap-4 mb-5">
+
+        <!-- Project Card 1 -->
+        <div id="proj-1" class="border-2 border-black rounded-2xl bg-white p-4">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-9 h-9 bg-gray-200 border-2 border-black rounded-xl flex items-center justify-center">
+              <i class="fa-solid fa-seedling text-sm"></i>
+            </div>
+            <div class="flex gap-1">
+              <span class="text-xs border-2 border-black rounded-full px-2 py-0.5 font-mono font-bold bg-gray-100">ML</span>
+              <span class="text-xs border-2 border-black rounded-full px-2 py-0.5 font-mono font-bold bg-gray-100">CV</span>
+            </div>
+          </div>
+          <h4 class="font-black text-sm leading-tight mb-1">Red Chili Pest Detection</h4>
+          <p class="text-xs text-gray-500 leading-snug mb-3">TensorFlow + MLflow + Docker pipeline for real-time crop pest classification.</p>
+          <div class="flex flex-wrap gap-1 mb-3">
+            <span class="text-xs bg-gray-100 border border-gray-300 rounded px-1.5 py-0.5 font-mono">TensorFlow</span>
+            <span class="text-xs bg-gray-100 border border-gray-300 rounded px-1.5 py-0.5 font-mono">MLflow</span>
+            <span class="text-xs bg-gray-100 border border-gray-300 rounded px-1.5 py-0.5 font-mono">Docker</span>
+          </div>
+          <!-- Toggle: Quick / Deep -->
+          <div class="flex border-2 border-black rounded-lg overflow-hidden text-xs font-bold">
+            <button class="flex-1 py-1.5 bg-gray-900 text-white text-center">Quick View</button>
+            <button class="flex-1 py-1.5 bg-white text-center">Deep Dive</button>
+          </div>
+        </div>
+
+        <!-- Project Card 2 -->
+        <div id="proj-2" class="border-2 border-black rounded-2xl bg-white p-4">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-9 h-9 bg-gray-200 border-2 border-black rounded-xl flex items-center justify-center">
+              <i class="fa-solid fa-cart-shopping text-sm"></i>
+            </div>
+            <div class="flex gap-1">
+              <span class="text-xs border-2 border-black rounded-full px-2 py-0.5 font-mono font-bold bg-gray-100">API</span>
+              <span class="text-xs border-2 border-black rounded-full px-2 py-0.5 font-mono font-bold bg-gray-100">BE</span>
+            </div>
+          </div>
+          <h4 class="font-black text-sm leading-tight mb-1">FastAPI E-commerce System</h4>
+          <p class="text-xs text-gray-500 leading-snug mb-3">Full-featured REST API with auth, payments, and product management.</p>
+          <div class="flex flex-wrap gap-1 mb-3">
+            <span class="text-xs bg-gray-100 border border-gray-300 rounded px-1.5 py-0.5 font-mono">FastAPI</span>
+            <span class="text-xs bg-gray-100 border border-gray-300 rounded px-1.5 py-0.5 font-mono">PostgreSQL</span>
+            <span class="text-xs bg-gray-100 border border-gray-300 rounded px-1.5 py-0.5 font-mono">Redis</span>
+          </div>
+          <div class="flex border-2 border-black rounded-lg overflow-hidden text-xs font-bold">
+            <button class="flex-1 py-1.5 bg-gray-900 text-white text-center">Quick View</button>
+            <button class="flex-1 py-1.5 bg-white text-center">Deep Dive</button>
+          </div>
+        </div>
+
+        <!-- Project Card 3 -->
+        <div id="proj-3" class="border-2 border-black rounded-2xl bg-white p-4">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-9 h-9 bg-gray-200 border-2 border-black rounded-xl flex items-center justify-center">
+              <i class="fa-solid fa-eye text-sm"></i>
+            </div>
+            <div class="flex gap-1">
+              <span class="text-xs border-2 border-black rounded-full px-2 py-0.5 font-mono font-bold bg-gray-100">IoT</span>
+              <span class="text-xs border-2 border-black rounded-full px-2 py-0.5 font-mono font-bold bg-gray-100">ESP</span>
+            </div>
+          </div>
+          <h4 class="font-black text-sm leading-tight mb-1">SightAssist ESP32-C3</h4>
+          <p class="text-xs text-gray-500 leading-snug mb-3">Embedded assistive device for visually impaired using computer vision + ultrasonic sensors.</p>
+          <div class="flex flex-wrap gap-1 mb-3">
+            <span class="text-xs bg-gray-100 border border-gray-300 rounded px-1.5 py-0.5 font-mono">ESP32-C3</span>
+            <span class="text-xs bg-gray-100 border border-gray-300 rounded px-1.5 py-0.5 font-mono">MicroPython</span>
+            <span class="text-xs bg-gray-100 border border-gray-300 rounded px-1.5 py-0.5 font-mono">MQTT</span>
+          </div>
+          <div class="flex border-2 border-black rounded-lg overflow-hidden text-xs font-bold">
+            <button class="flex-1 py-1.5 bg-gray-900 text-white text-center">Quick View</button>
+            <button class="flex-1 py-1.5 bg-white text-center">Deep Dive</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── BOTTOM ROW: GitHub Stats + Activity Graph ── -->
+      <div id="bottom-row" class="grid grid-cols-3 gap-4">
+
+        <!-- GitHub Stats Card -->
+        <div id="github-stats-card" class="border-2 border-black rounded-2xl bg-white p-4">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-black text-sm">GitHub Stats</h3>
+            <button class="text-xs border-2 border-black rounded-lg px-2 py-1 font-semibold">See all</button>
+          </div>
+
+          <!-- Big rating number (like review rating) -->
+          <div class="flex items-center gap-3 mb-3">
+            <div class="text-4xl font-black">4.8</div>
+            <div>
+              <div class="flex gap-0.5 mb-1">
+                <i class="fa-solid fa-star text-gray-700 text-xs"></i>
+                <i class="fa-solid fa-star text-gray-700 text-xs"></i>
+                <i class="fa-solid fa-star text-gray-700 text-xs"></i>
+                <i class="fa-solid fa-star text-gray-700 text-xs"></i>
+                <i class="fa-solid fa-star-half-stroke text-gray-700 text-xs"></i>
+              </div>
+              <p class="text-xs text-gray-400">Activity Score</p>
+            </div>
+          </div>
+
+          <div class="text-3xl font-black mb-0.5">36</div>
+          <p class="text-xs text-gray-400 mb-4">public repositories</p>
+
+          <!-- Mini stat rows -->
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center justify-between text-xs border-t border-gray-100 pt-2">
+              <span class="text-gray-500 font-medium">Achievements</span>
+              <span class="font-black">Pull Shark · Arctic Vault</span>
+            </div>
+            <div class="flex items-center justify-between text-xs border-t border-gray-100 pt-2">
+              <span class="text-gray-500 font-medium">Streak</span>
+              <span class="font-black">127 days</span>
+            </div>
+            <div class="flex items-center justify-between text-xs border-t border-gray-100 pt-2">
+              <span class="text-gray-500 font-medium">PRs Merged</span>
+              <span class="font-black">48</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contribution Graph Placeholder (spans 2 cols) -->
+        <div id="contribution-graph" class="col-span-2 border-2 border-black rounded-2xl bg-white p-4">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-black text-sm">Contribution Activity</h3>
+            <div class="flex gap-2">
+              <button class="text-xs border-2 border-black rounded-lg px-2 py-1 font-semibold bg-gray-900 text-white">2026</button>
+              <button class="text-xs border-2 border-black rounded-lg px-2 py-1 font-semibold">2025</button>
+            </div>
+          </div>
+
+          <!-- Contribution graph placeholder -->
+          <div class="w-full h-28 bg-gray-100 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center gap-2 mb-4">
+            <i class="fa-brands fa-github text-gray-400 text-2xl"></i>
+            <span class="text-xs text-gray-400 font-medium">GitHub Contribution Graph (Pacman-style)</span>
+          </div>
+
+          <!-- Achievement badges row -->
+          <div class="flex gap-3">
+            <div class="flex-1 border-2 border-black rounded-xl p-2 flex items-center gap-2 bg-gray-50">
+              <div class="w-7 h-7 bg-gray-200 border border-gray-300 rounded-full flex items-center justify-center">
+                <i class="fa-solid fa-code-pull-request text-xs text-gray-600"></i>
+              </div>
+              <div>
+                <div class="text-xs font-black">Pull Shark</div>
+                <div class="text-xs text-gray-400">×2</div>
+              </div>
+            </div>
+            <div class="flex-1 border-2 border-black rounded-xl p-2 flex items-center gap-2 bg-gray-50">
+              <div class="w-7 h-7 bg-gray-200 border border-gray-300 rounded-full flex items-center justify-center">
+                <i class="fa-solid fa-snowflake text-xs text-gray-600"></i>
+              </div>
+              <div>
+                <div class="text-xs font-black">Arctic Vault</div>
+                <div class="text-xs text-gray-400">Archived</div>
+              </div>
+            </div>
+            <div class="flex-1 border-2 border-black rounded-xl p-2 flex items-center gap-2 bg-gray-50">
+              <div class="w-7 h-7 bg-gray-200 border border-gray-300 rounded-full flex items-center justify-center">
+                <i class="fa-solid fa-fire text-xs text-gray-600"></i>
+              </div>
+              <div>
+                <div class="text-xs font-black">Streak</div>
+                <div class="text-xs text-gray-400">127 days</div>
+              </div>
+            </div>
+            <div class="flex-1 border-2 border-black rounded-xl p-2 flex items-center gap-2 bg-gray-50">
+              <div class="w-7 h-7 bg-gray-200 border border-gray-300 rounded-full flex items-center justify-center">
+                <i class="fa-solid fa-star text-xs text-gray-600"></i>
+              </div>
+              <div>
+                <div class="text-xs font-black">Stars</div>
+                <div class="text-xs text-gray-400">84 total</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- end bottom row -->
+
+    </main>
+    <!-- end main content -->
+
+  </div>
+  <!-- end app shell -->
+
+  <!-- ── KITTY TRIGGER BUTTON (fixed bottom-right) ── -->
+  <button id="kitty-trigger"
+    onclick="openKitty()"
+    style="position:fixed;bottom:24px;right:24px;z-index:9997;background:#1a1b26;color:#7aa2f7;border:2px solid #3b3d57;padding:8px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,0.4);">
+    <span style="color:#9ece6a;font-weight:700;">$</span> kitty
+    <span style="color:#a9b1d6;font-size:10px;">(Wayland)</span>
+  </button>
+
+  <!-- ── OVERLAY ── -->
+  <div id="kitty-overlay" onclick="closeKitty()"></div>
+
+  <!-- ── KITTY WINDOW ── -->
+  <div id="kitty-window">
+
+    <!-- Title bar -->
+    <div class="kitty-titlebar" id="kitty-drag-handle">
+      <div class="kitty-dots">
+        <div class="kitty-dot dot-red"    onclick="closeKitty()" title="Close"></div>
+        <div class="kitty-dot dot-yellow" title="Minimize"></div>
+        <div class="kitty-dot dot-green"  title="Maximize"></div>
+      </div>
+      <span class="kitty-title">&gt;_ kitty ~ bagus@hyprland-rice (Wayland)</span>
+      <button class="kitty-reset" onclick="resetTerm()">Reset</button>
+    </div>
+
+    <!-- Terminal body -->
+    <div class="kitty-body" id="kitty-body">
+
+      <!-- Tip bar -->
+      <div class="kitty-tip">
+        💡 Tip: Type <a onclick="runCmd('neofetch')">neofetch</a>,
+        <a onclick="runCmd('projects')">projects</a>,
+        <a onclick="runCmd('contact')">contact</a>, or
+        <a onclick="runCmd('sudo hire')">sudo hire</a> below!
+      </div>
+
+      <!-- Output area -->
+      <div id="term-output"></div>
+    </div>
+
+    <!-- Input bar -->
+    <div class="kitty-inputbar">
+      <span>bagus@hyprland-rice ~ $</span>
+      <input type="text" id="kitty-input" placeholder="type 'help' or 'neofetch'..."
+        onkeydown="if(event.key==='Enter') sendCmd()" autocomplete="off" spellcheck="false" />
+      <button class="kitty-send" onclick="sendCmd()">
+        <i class="fa-solid fa-paper-plane" style="font-size:11px;"></i>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // ── Open / Close ──
+    function openKitty() {
+      document.getElementById('kitty-window').classList.add('open');
+      document.getElementById('kitty-overlay').classList.add('open');
+      document.getElementById('kitty-input').focus();
+      // Auto-run neofetch on first open
+      if (!document.getElementById('kitty-window').dataset.opened) {
+        document.getElementById('kitty-window').dataset.opened = '1';
+        setTimeout(() => runCmd('neofetch'), 200);
+      }
+    }
+    function closeKitty() {
+      document.getElementById('kitty-window').classList.remove('open');
+      document.getElementById('kitty-overlay').classList.remove('open');
+    }
+
+    // ── Reset ──
+    function resetTerm() {
+      document.getElementById('term-output').innerHTML = '';
+    }
+
+    // ── Send from input ──
+    function sendCmd() {
+      const inp = document.getElementById('kitty-input');
+      const val = inp.value.trim();
+      if (!val) return;
+      appendLine(`<span class="term-prompt">bagus@hyprland-rice ~ $</span> <span class="term-cmd">${val}</span>`);
+      inp.value = '';
+      runCmd(val.toLowerCase());
+    }
+
+    // ── Command handler ──
+    function runCmd(cmd) {
+      const c = cmd.toLowerCase().trim();
+      if (c === 'neofetch') {
+        appendRaw(`
+<div style="display:flex;gap:20px;align-items:flex-start;margin:8px 0;">
+  <pre class="term-ascii">    /\\_/\\
+  ( o.o )
+   &gt; ^ &lt;</pre>
+  <div>
+    <div class="term-line"><span class="term-label">OS:       </span><span class="term-value">Hyprland / Arch Linux (Daily Driver)</span></div>
+    <div class="term-line"><span class="term-label">Host:     </span><span class="term-value">Bagus Alfiyan Yusuf (6th Sem CS)</span></div>
+    <div class="term-line"><span class="term-label">Kernel:   </span><span class="term-value">ML / Backend / IoT Systems</span></div>
+    <div class="term-line"><span class="term-label">Uptime:   </span><span class="term-value">3+ Years Active Coding</span></div>
+    <div class="term-line"><span class="term-label">Packages: </span><span class="term-value">TensorFlow, FastAPI, ESP32, Docker</span></div>
+    <div class="term-line"><span class="term-label">Shell:    </span><span class="term-value">Kitty / Zsh + JetBrains Mono</span></div>
+    <div class="term-line"><span class="term-label">Memory:   </span><span class="term-value">Deep Debugging First, Execute Second</span></div>
+  </div>
+</div>`);
+      } else if (c === 'projects') {
+        appendRaw(`
+<div style="margin:8px 0;">
+  <div class="term-line" style="color:#bb9af7;font-weight:700;">── Featured Projects ──</div>
+  <div class="term-line"><span class="term-label">[ML]  </span><span class="term-value">red-chili-pepper-pests-model</span>   TensorFlow · MLflow · Docker</div>
+  <div class="term-line"><span class="term-label">[BE]  </span><span class="term-value">fastapi-ecommerce-system</span>       FastAPI · PostgreSQL · Redis</div>
+  <div class="term-line"><span class="term-label">[IoT] </span><span class="term-value">SightAssist-ESP32-C3</span>           MicroPython · MQTT · CV</div>
+  <div class="term-line"><span class="term-label">[ML]  </span><span class="term-value">crop-recommendation-dataset</span>    Scikit-learn · Streamlit</div>
+  <div class="term-line" style="color:#565f89;margin-top:4px;">→ type 'open &lt;name&gt;' to deep-dive into a project</div>
+</div>`);
+      } else if (c === 'contact') {
+        appendRaw(`
+<div style="margin:8px 0;">
+  <div class="term-line" style="color:#bb9af7;font-weight:700;">── Contact Info ──</div>
+  <div class="term-line"><span class="term-label">GitHub:   </span><span class="term-value">github.com/bagusalfiyan</span></div>
+  <div class="term-line"><span class="term-label">LinkedIn: </span><span class="term-value">linkedin.com/in/bagusalfiyan</span></div>
+  <div class="term-line"><span class="term-label">Email:    </span><span class="term-value">bagus@example.com</span></div>
+  <div class="term-line"><span class="term-label">Medium:   </span><span class="term-value">medium.com/@bagusalfiyan</span></div>
+</div>`);
+      } else if (c === 'sudo hire' || c === 'hire') {
+        appendRaw(`
+<div style="margin:8px 0;">
+  <div class="term-line" style="color:#9ece6a;font-weight:700;">[sudo] password for bagus: ••••••••</div>
+  <div class="term-line" style="color:#9ece6a;">✓ Access granted. Initiating hire sequence…</div>
+  <div class="term-line" style="color:#e0af68;margin-top:6px;">📄 CV downloaded successfully → bagus_cv_2026.pdf</div>
+  <div class="term-line" style="color:#a9b1d6;margin-top:4px;">→ Reach out via contact or LinkedIn to proceed.</div>
+</div>`);
+      } else if (c === 'help') {
+        appendRaw(`
+<div style="margin:8px 0;">
+  <div class="term-line" style="color:#bb9af7;font-weight:700;">── Available Commands ──</div>
+  <div class="term-line"><span class="term-label">neofetch   </span>Show system info & bio</div>
+  <div class="term-line"><span class="term-label">projects   </span>List featured projects</div>
+  <div class="term-line"><span class="term-label">contact    </span>Show contact info</div>
+  <div class="term-line"><span class="term-label">sudo hire  </span>Download CV + initiate contact</div>
+  <div class="term-line"><span class="term-label">clear      </span>Clear terminal</div>
+</div>`);
+      } else if (c === 'clear') {
+        document.getElementById('term-output').innerHTML = '';
+        return;
+      } else {
+        appendLine(`<span style="color:#f7768e;">bash: ${escHtml(cmd)}: command not found — try 'help'</span>`);
+      }
+      scrollBottom();
+    }
+
+    function appendLine(html) {
+      const div = document.createElement('div');
+      div.className = 'term-line';
+      div.innerHTML = html;
+      document.getElementById('term-output').appendChild(div);
+      scrollBottom();
+    }
+    function appendRaw(html) {
+      const wrap = document.createElement('div');
+      wrap.innerHTML = html;
+      document.getElementById('term-output').appendChild(wrap);
+      scrollBottom();
+    }
+    function scrollBottom() {
+      const body = document.getElementById('kitty-body');
+      body.scrollTop = body.scrollHeight;
+    }
+    function escHtml(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // ── Drag to move ──
+    (function() {
+      const win = document.getElementById('kitty-window');
+      const handle = document.getElementById('kitty-drag-handle');
+      let dragging = false, ox = 0, oy = 0;
+
+      handle.addEventListener('mousedown', e => {
+        dragging = true;
+        const rect = win.getBoundingClientRect();
+        ox = e.clientX - rect.left;
+        oy = e.clientY - rect.top;
+        win.style.transform = 'none';
+        win.style.left = rect.left + 'px';
+        win.style.top  = rect.top  + 'px';
+        e.preventDefault();
+      });
+      document.addEventListener('mousemove', e => {
+        if (!dragging) return;
+        win.style.left = (e.clientX - ox) + 'px';
+        win.style.top  = (e.clientY - oy) + 'px';
+      });
+      document.addEventListener('mouseup', () => { dragging = false; });
+    })();
+  </script>
+
+</body>
+</html>
