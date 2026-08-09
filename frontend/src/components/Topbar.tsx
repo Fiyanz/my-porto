@@ -1,9 +1,6 @@
 export default function Topbar() {
   return (
-    <header id="topbar" className="flex items-center justify-between mb-6">
-      <button className="w-8 h-8 border-2 border-black rounded-lg flex items-center justify-center bg-white hover:bg-gray-50">
-        <i className="fa-solid fa-arrow-left text-xs"></i>
-      </button>
+    <header id="topbar" className="flex items-center justify-end mb-6">
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2 border-2 border-black rounded-lg px-3 py-1.5 bg-white w-56">
           <i className="fa-solid fa-magnifying-glass text-gray-400 text-xs"></i>
@@ -12,9 +9,6 @@ export default function Topbar() {
         <button className="w-8 h-8 border-2 border-black rounded-lg flex items-center justify-center bg-white hover:bg-gray-50">
           <i className="fa-solid fa-bell text-xs"></i>
         </button>
-        <div className="w-8 h-8 border-2 border-black rounded-full overflow-hidden">
-          <img src="https://api.dicebear.com/7.x/notionists/svg?scale=200&seed=42" className="w-full h-full object-cover" alt="Avatar" />
-        </div>
       </div>
     </header>
   );

@@ -22,6 +22,7 @@ services:
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-portfolio}
       - SECRET_KEY=${SECRET_KEY:-supersecretkey}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
     ports:
       - "8001:8000"
     depends_on:
@@ -32,7 +33,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8080/api
+      - NEXT_PUBLIC_API_URL=/api
     volumes:
       - ./frontend:/app
       - /app/node_modules

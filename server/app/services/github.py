@@ -42,6 +42,7 @@ async def fetch_github_stats() -> Dict[str, Any]:
             "public_repos": user_data.get("public_repos", 0),
             "followers": user_data.get("followers", 0),
             "total_stars": total_stars,
+            "total_commits": 1204, # Mock for now, requires GraphQL
             "activity_score": 4.8, # Mock for now
             "streak_days": 127, # Needs GraphQL or scraping to be real, mock for now
             "prs_merged": 48 # Needs search API, mock for now
@@ -56,6 +57,7 @@ def get_fallback_stats():
         "public_repos": 36,
         "followers": 0,
         "total_stars": 84,
+        "total_commits": 1204,
         "activity_score": 4.8,
         "streak_days": 127,
         "prs_merged": 48

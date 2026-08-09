@@ -1,10 +1,12 @@
 from pydantic import BaseModel, ConfigDict, EmailStr
+from typing import Optional
 from datetime import datetime
 
 class ContactBase(BaseModel):
     name: str
     email: EmailStr
     message: str
+    purpose: Optional[str] = None
 
 class ContactCreate(ContactBase):
     pass

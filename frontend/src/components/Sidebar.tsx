@@ -1,9 +1,11 @@
 'use client';
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const links = [
     { href: '/', icon: 'fa-house', label: 'Home' },
@@ -14,11 +16,20 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside id="sidebar" className="w-52 border-r-2 border-black bg-white flex flex-col py-6 px-4 shrink-0">
+    <aside id="sidebar" className={`${isCollapsed ? 'w-20 px-2' : 'w-52 px-4'} border-r-2 border-black bg-white flex flex-col py-6 shrink-0 transition-all duration-300 relative`}>
+      
+      <button 
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        className="absolute -right-3.5 top-7 w-7 h-7 border-2 border-black rounded-full bg-white flex items-center justify-center hover:bg-gray-100 z-10 cursor-pointer"
+        title="Toggle Sidebar"
+      >
+        <i className={`fa-solid ${isCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'} text-[10px]`}></i>
+      </button>
+
       {/* Logo */}
-      <div id="sidebar-logo" className="flex items-center gap-2 mb-10 border-2 border-black rounded-lg px-3 py-2">
-        <div className="w-7 h-7 bg-gray-800 rounded flex items-center justify-center text-white text-xs font-bold">&lt;/&gt;</div>
-        <span className="font-black text-lg tracking-tight">PORTO</span>
+      <div id="sidebar-logo" className={`flex items-center gap-2 mb-10 ${isCollapsed ? 'justify-center' : 'border-2 border-black rounded-lg px-3 py-2'}`}>
+        <div className="w-7 h-7 bg-gray-800 rounded flex items-center justify-center text-white text-xs font-bold shrink-0">&lt;/&gt;</div>
+        {!isCollapsed && <span className="font-black text-lg tracking-tight">PORTO</span>}
       </div>
 
       {/* Nav items */}
@@ -29,10 +40,11 @@ export default function Sidebar() {
             <Link 
               key={link.href} 
               href={link.href} 
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm ${isActive ? 'bg-gray-900 text-white font-semibold' : 'hover:bg-gray-100 font-medium text-gray-600'}`}
+              className={`flex items-center gap-3 py-2 rounded-lg text-sm transition-colors ${isActive ? 'bg-gray-900 text-white font-semibold' : 'hover:bg-gray-100 font-medium text-gray-600'} ${isCollapsed ? 'justify-center px-0' : 'px-3'}`}
+              title={isCollapsed ? link.label : undefined}
             >
-              <i className={`fa-solid ${link.icon} text-xs`}></i>
-              <span>{link.label}</span>
+              <i className={`fa-solid ${link.icon} text-xs shrink-0`}></i>
+              {!isCollapsed && <span>{link.label}</span>}
             </Link>
           );
         })}
@@ -40,9 +52,12 @@ export default function Sidebar() {
         {/* Spacer */}
         <div className="flex-1"></div>
 
-        <button className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 font-medium text-sm text-gray-500 mt-auto w-full text-left">
-          <i className="fa-solid fa-moon text-xs"></i>
-          <span>Dark Mode</span>
+        <button 
+          className={`flex items-center gap-3 py-2 rounded-lg hover:bg-gray-100 font-medium text-sm text-gray-500 mt-auto w-full text-left transition-colors ${isCollapsed ? 'justify-center px-0' : 'px-3'}`}
+          title={isCollapsed ? "Dark Mode" : undefined}
+        >
+          <i className="fa-solid fa-moon text-xs shrink-0"></i>
+          {!isCollapsed && <span>Dark Mode</span>}
         </button>
       </nav>
     </aside>

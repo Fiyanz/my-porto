@@ -1,6 +1,11 @@
 import asyncio
 from app.db.session import SessionLocal
 from app.models.project import Project
+from app.models.skill import Skill
+from app.models.experience import Experience
+from app.models.user import User
+from app.models.profile import Profile
+from app.core.security import get_password_hash
 
 async def seed():
     db = SessionLocal()
@@ -92,16 +97,136 @@ async def seed():
         }
     ]
 
+    skills_data = [
+        {"category": "Languages", "name": "Python", "level": 95, "is_primary": True, "display_order": 1},
+        {"category": "Languages", "name": "TypeScript", "level": 75, "display_order": 2},
+        {"category": "Languages", "name": "Go", "level": 80, "is_primary": True, "display_order": 3},
+        {"category": "Languages", "name": "Dart", "level": 65, "display_order": 4},
+        {"category": "Languages", "name": "Solidity", "level": 55, "display_order": 5},
+        {"category": "Languages", "name": "C / C++", "level": 60, "display_order": 6},
+        {"category": "Languages", "name": "MicroPython", "level": 70, "display_order": 7},
+        {"category": "Languages", "name": "Bash", "level": 65, "display_order": 8},
+
+        {"category": "ML / Data", "name": "TensorFlow", "level": 90, "is_primary": True, "display_order": 1},
+        {"category": "ML / Data", "name": "PyTorch", "level": 70, "display_order": 2},
+        {"category": "ML / Data", "name": "Scikit-learn", "level": 85, "is_primary": True, "display_order": 3},
+        {"category": "ML / Data", "name": "MLflow", "level": 75, "display_order": 4},
+        {"category": "ML / Data", "name": "Pandas", "level": 85, "display_order": 5},
+        {"category": "ML / Data", "name": "NumPy", "level": 85, "display_order": 6},
+        {"category": "ML / Data", "name": "OpenCV", "level": 70, "display_order": 7},
+        {"category": "ML / Data", "name": "Streamlit", "level": 65, "display_order": 8},
+
+        {"category": "Backend / Infra", "name": "FastAPI", "level": 92, "is_primary": True, "display_order": 1},
+        {"category": "Backend / Infra", "name": "PostgreSQL", "level": 85, "display_order": 2},
+        {"category": "Backend / Infra", "name": "Redis", "level": 75, "display_order": 3},
+        {"category": "Backend / Infra", "name": "Docker", "level": 85, "is_primary": True, "display_order": 4},
+        {"category": "Backend / Infra", "name": "Nginx", "level": 70, "display_order": 5},
+        {"category": "Backend / Infra", "name": "SQLAlchemy", "level": 85, "display_order": 6},
+        {"category": "Backend / Infra", "name": "RabbitMQ", "level": 60, "display_order": 7},
+        {"category": "Backend / Infra", "name": "Celery", "level": 60, "display_order": 8},
+
+        {"category": "IoT / Embedded", "name": "ESP32-C3", "level": 80, "is_primary": True, "display_order": 1},
+        {"category": "IoT / Embedded", "name": "MQTT", "level": 78, "is_primary": True, "display_order": 2},
+        {"category": "IoT / Embedded", "name": "I2C / SPI", "level": 65, "display_order": 3},
+        {"category": "IoT / Embedded", "name": "FreeRTOS", "level": 55, "display_order": 4},
+        {"category": "IoT / Embedded", "name": "Arduino", "level": 70, "display_order": 5},
+        {"category": "IoT / Embedded", "name": "Raspberry Pi", "level": 65, "display_order": 6},
+
+        {"category": "Mobile / Web3", "name": "Flutter", "level": 65, "is_primary": True, "display_order": 1},
+        {"category": "Mobile / Web3", "name": "Riverpod", "level": 55, "display_order": 2},
+        {"category": "Mobile / Web3", "name": "Solidity", "level": 58, "display_order": 3},
+        {"category": "Mobile / Web3", "name": "Hardhat", "level": 60, "is_primary": True, "display_order": 4},
+        {"category": "Mobile / Web3", "name": "ethers.js", "level": 55, "display_order": 5},
+        {"category": "Mobile / Web3", "name": "IPFS", "level": 40, "display_order": 6},
+
+        {"category": "Tooling / OS", "name": "Arch Linux", "level": 90, "is_primary": True, "display_order": 1},
+        {"category": "Tooling / OS", "name": "Hyprland", "level": 85, "is_primary": True, "display_order": 2},
+        {"category": "Tooling / OS", "name": "Kitty", "level": 80, "display_order": 3},
+        {"category": "Tooling / OS", "name": "Neovim", "level": 85, "display_order": 4},
+        {"category": "Tooling / OS", "name": "Git", "level": 90, "display_order": 5},
+        {"category": "Tooling / OS", "name": "GitHub Actions", "level": 70, "display_order": 6},
+        {"category": "Tooling / OS", "name": "Postman", "level": 75, "display_order": 7},
+        {"category": "Tooling / OS", "name": "Locust", "level": 65, "display_order": 8},
+    ]
+
+    experiences_data = [
+        {
+            "type": "education", "status": "Current", "time_range": "2022 – Present",
+            "institution": "Universitas [Name] · Bandung", "title": "S1 Computer Science",
+            "description": "Currently pursuing a bachelor's degree in Computer Science.",
+            "icon": "fa-graduation-cap", "icon_bg": "bg-gray-900", "display_order": 1
+        },
+        {
+            "type": "bootcamp", "status": "Completed", "time_range": "2024",
+            "institution": "Independent Program · Remote", "title": "AI/ML Bootcamp — Agrikultur",
+            "description": "Intensive bootcamp focusing on applied ML in agriculture.",
+            "icon": "fa-brain", "icon_bg": "bg-gray-700", "display_order": 2
+        },
+        {
+            "type": "program", "status": "Completed", "time_range": "2023",
+            "institution": "Self-directed · GitHub + Online Courses", "title": "Backend Engineering Program",
+            "description": "Comprehensive self-study of backend architecture and APIs.",
+            "icon": "fa-server", "icon_bg": "bg-gray-600", "display_order": 3
+        },
+        {
+            "type": "oss", "status": "Ongoing", "time_range": "2022 – Present",
+            "institution": "GitHub · Various Projects", "title": "Open Source Contributor",
+            "description": "Active contributor to various open-source tools and libraries.",
+            "icon": "fa-users", "icon_bg": "bg-gray-500", "display_order": 4
+        },
+        {
+            "type": "milestone", "status": "Completed", "time_range": "2021",
+            "institution": "Self-taught → CS Degree", "title": "Started Coding",
+            "description": "Began self-teaching programming which led to a formal CS degree.",
+            "icon": "fa-code", "icon_bg": "bg-gray-300", "display_order": 5
+        }
+    ]
+
     try:
         # Clear existing
         db.query(Project).delete()
+        db.query(Skill).delete()
+        db.query(Experience).delete()
         
         for data in projects_data:
             project = Project(**data)
             db.add(project)
+            
+        for data in skills_data:
+            skill = Skill(**data)
+            db.add(skill)
+            
+        for data in experiences_data:
+            experience = Experience(**data)
+            db.add(experience)
         
         db.commit()
-        print("Successfully seeded projects data!")
+
+        # Seed admin user
+        db.query(User).delete()
+        admin_user = User(
+            email="admin@portfolio.local",
+            hashed_password=get_password_hash("admin123"),
+            is_active=True,
+            is_superuser=True
+        )
+        db.add(admin_user)
+
+        # Seed profile
+        db.query(Profile).delete()
+        profile = Profile(
+            name="Bagus Alfiyan",
+            title="CS Student · ML Engineer · Backend Dev",
+            bio="Undergraduate CS student who builds end-to-end systems — from ML models to microcontrollers.",
+            github_url="https://github.com/Fiyanz",
+            email="bagus@example.com",
+            location="Bandung, Indonesia",
+            status="Available for Internship"
+        )
+        db.add(profile)
+
+        db.commit()
+        print("Successfully seeded all data!")
     except Exception as e:
         print(f"Error seeding data: {e}")
         db.rollback()

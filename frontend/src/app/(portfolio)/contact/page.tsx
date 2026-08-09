@@ -3,21 +3,56 @@ import { useState } from 'react';
 
 export default function Contact() {
   const [purpose, setPurpose] = useState('Internship');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  
   const [status, setStatus] = useState<React.ReactNode>(null);
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (!name.trim() || !email.trim() || !message.trim()) {
+      setStatus(<span className="text-red-500">Please fill all required fields.</span>);
+      return;
+    }
+
     setIsSending(true);
-    setTimeout(() => {
-      setIsSending(false);
+    setStatus(null);
+    
+    try {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+      const res = await fetch(`${API_URL}/contact/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, message, purpose }),
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to send message');
+      }
+
       setIsSent(true);
-      setStatus(
-        <>
-          ✓ Message queued — reply within 24h
-        </>
-      );
-    }, 1200);
+      setStatus(<span className="text-green-600">✓ Message sent — reply within 24h</span>);
+      
+      // Reset form after 5 seconds to allow another message
+      setTimeout(() => {
+        setIsSent(false);
+        setStatus(null);
+        setName('');
+        setEmail('');
+        setMessage('');
+        setPurpose('Internship');
+      }, 5000);
+      
+    } catch (err) {
+      console.error(err);
+      setStatus(<span className="text-red-500">✗ Failed to send. Please try again.</span>);
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -95,11 +130,22 @@ export default function Contact() {
             <div className="grid grid-cols-2 gap-3 mb-3">
               <div>
                 <label className="text-xs font-bold text-gray-600 block mb-1">Name</label>
-                <input className="w-full border-2 border-black bg-gray-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black" placeholder="Your name" />
+                <input 
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full border-2 border-black bg-gray-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black" 
+                  placeholder="Your name" 
+                />
               </div>
               <div>
                 <label className="text-xs font-bold text-gray-600 block mb-1">Email</label>
-                <input className="w-full border-2 border-black bg-gray-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black" placeholder="your@email.com" />
+                <input 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full border-2 border-black bg-gray-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black" 
+                  placeholder="your@email.com" 
+                  type="email"
+                />
               </div>
             </div>
 
@@ -120,7 +166,12 @@ export default function Contact() {
 
             <div className="mb-4">
               <label className="text-xs font-bold text-gray-600 block mb-1">Message</label>
-              <textarea className="w-full border-2 border-black bg-gray-50 px-3 py-2 text-sm h-28 resize-none focus:outline-none focus:ring-2 focus:ring-black" placeholder="What's on your mind? Tell me about the role, project, or just say hi."></textarea>
+              <textarea 
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="w-full border-2 border-black bg-gray-50 px-3 py-2 text-sm h-28 resize-none focus:outline-none focus:ring-2 focus:ring-black" 
+                placeholder="What's on your mind? Tell me about the role, project, or just say hi."
+              ></textarea>
             </div>
 
             <div className="flex items-center gap-3">
