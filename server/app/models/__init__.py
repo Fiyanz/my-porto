@@ -5,3 +5,4 @@ from app.models.contact import Contact
 from app.models.skill import Skill
 from app.models.experience import Experience
 from app.models.profile import Profile
+from app.models.file import FileStorage

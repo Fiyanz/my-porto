@@ -15,4 +15,5 @@ class Profile(Base):
     email = Column(String, nullable=True, default="bagus@example.com")
     location = Column(String, nullable=True, default="Bandung, Indonesia")
     status = Column(String, nullable=True, default="Available for Internship")
+    cv_url = Column(String, nullable=True)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())

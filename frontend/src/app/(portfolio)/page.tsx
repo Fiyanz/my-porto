@@ -1,4 +1,5 @@
 import GithubCalendarClient from '@/components/GithubCalendarClient';
+import Link from 'next/link';
 
 async function getGithubStats() {
   try {
@@ -70,7 +71,7 @@ export default async function Home() {
         <div id="hero-card" className="col-span-2 border-2 border-black rounded-2xl bg-white p-5">
           <div className="flex gap-6 items-center">
             <div className="w-52 h-52 bg-gray-200 rounded-xl border-2 border-black shrink-0 overflow-hidden flex items-end justify-center">
-              <img src="https://api.dicebear.com/7.x/notionists/svg?scale=200&seed=99" className="w-full h-full object-cover" alt="Avatar" />
+              <img src={profile?.avatar_url || "https://api.dicebear.com/7.x/notionists/svg?scale=200&seed=99"} className="w-full h-full object-cover" alt="Avatar" />
             </div>
             <div className="flex-1">
               <div className="flex items-start justify-between">
@@ -119,14 +120,14 @@ export default async function Home() {
               </p>
 
               <div className="flex gap-2 mt-3">
-                <button className="flex items-center gap-2 bg-gray-900 text-white text-xs font-bold px-4 py-2 rounded-lg border-2 border-black hover:bg-gray-800 transition">
+                <a href={profile?.cv_url || "/api/files/cv"} target="_blank" className="flex items-center gap-2 bg-gray-900 text-white text-xs font-bold px-4 py-2 rounded-lg border-2 border-black hover:bg-gray-800 transition">
                   <i className="fa-solid fa-download"></i>
                   Download CV
-                </button>
-                <button className="flex items-center gap-2 bg-white text-xs font-bold px-4 py-2 rounded-lg border-2 border-black hover:bg-gray-50 transition">
+                </a>
+                <Link href="/projects" className="flex items-center gap-2 bg-white text-xs font-bold px-4 py-2 rounded-lg border-2 border-black hover:bg-gray-50 transition">
                   <i className="fa-solid fa-layer-group"></i>
                   View Projects
-                </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -153,7 +154,7 @@ export default async function Home() {
 
       <div id="projects-heading" className="flex items-center justify-between mb-3">
         <h2 className="text-xl font-black">Featured Projects</h2>
-        <button className="text-xs font-semibold border-2 border-black px-3 py-1.5 rounded-lg bg-white hover:bg-gray-50">View all</button>
+        <Link href="/projects" className="text-xs font-semibold border-2 border-black px-3 py-1.5 rounded-lg bg-white hover:bg-gray-50">View all</Link>
       </div>
 
       <div id="project-cards" className="grid grid-cols-3 gap-4 mb-5">
@@ -177,7 +178,7 @@ export default async function Home() {
             </div>
             <div className="flex border-2 border-black rounded-lg overflow-hidden text-xs font-bold mt-auto">
               <a href={proj.link || '#'} target="_blank" className="flex-1 py-1.5 bg-gray-900 text-white text-center hover:bg-gray-800">Quick View</a>
-              <button className="flex-1 py-1.5 bg-white text-center hover:bg-gray-50">Deep Dive</button>
+              <Link href="/projects" className="flex-1 py-1.5 bg-white text-center hover:bg-gray-50 block">Deep Dive</Link>
             </div>
           </div>
         ))}
@@ -186,7 +187,7 @@ export default async function Home() {
         <div id="github-stats-card" className="border-2 border-black rounded-2xl bg-white p-4">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-black text-sm">GitHub Stats</h3>
-            <button className="text-xs border-2 border-black rounded-lg px-2 py-1 font-semibold hover:bg-gray-50">See all</button>
+            <a href="https://github.com/Fiyanz" target="_blank" rel="noopener noreferrer" className="text-xs border-2 border-black rounded-lg px-2 py-1 font-semibold hover:bg-gray-50">See all</a>
           </div>
           <div className="flex items-center gap-3 mb-3">
             <div className="text-4xl font-black">{stats.total_commits || 1204}</div>

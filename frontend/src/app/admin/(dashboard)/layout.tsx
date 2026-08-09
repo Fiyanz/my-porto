@@ -82,9 +82,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <main className="flex-1 bg-gray-50 overflow-y-auto">
         <div className="border-b-2 border-black bg-white px-6 py-3 flex items-center justify-between">
           <span className="font-black text-sm">Admin Panel</span>
-          <button onClick={handleLogout} className="text-xs text-gray-500 hover:text-gray-700 font-medium flex items-center gap-1">
-            <i className="fa-solid fa-right-from-bracket text-xs"></i> Logout
-          </button>
+          <div className="text-sm font-black text-gray-800 flex items-center gap-2">
+            <span className="text-base">👋</span> Hai, Fian!
+          </div>
         </div>
         <div className="p-6">{children}</div>
       </main>

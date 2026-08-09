@@ -43,22 +43,12 @@ export default function Sidebar() {
               className={`flex items-center gap-3 py-2 rounded-lg text-sm transition-colors ${isActive ? 'bg-gray-900 text-white font-semibold' : 'hover:bg-gray-100 font-medium text-gray-600'} ${isCollapsed ? 'justify-center px-0' : 'px-3'}`}
               title={isCollapsed ? link.label : undefined}
             >
-              <i className={`fa-solid ${link.icon} text-xs shrink-0`}></i>
+              <i className={`fa-solid ${link.icon} ${isCollapsed ? 'text-lg' : 'text-sm'} transition-all shrink-0`}></i>
               {!isCollapsed && <span>{link.label}</span>}
             </Link>
           );
         })}
 
-        {/* Spacer */}
-        <div className="flex-1"></div>
-
-        <button 
-          className={`flex items-center gap-3 py-2 rounded-lg hover:bg-gray-100 font-medium text-sm text-gray-500 mt-auto w-full text-left transition-colors ${isCollapsed ? 'justify-center px-0' : 'px-3'}`}
-          title={isCollapsed ? "Dark Mode" : undefined}
-        >
-          <i className="fa-solid fa-moon text-xs shrink-0"></i>
-          {!isCollapsed && <span>Dark Mode</span>}
-        </button>
       </nav>
     </aside>
   );

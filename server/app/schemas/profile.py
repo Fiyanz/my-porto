@@ -12,6 +12,7 @@ class ProfileBase(BaseModel):
     email: Optional[str] = None
     location: Optional[str] = None
     status: Optional[str] = None
+    cv_url: Optional[str] = None
 
 class ProfileUpdate(BaseModel):
     name: Optional[str] = None
@@ -23,6 +24,7 @@ class ProfileUpdate(BaseModel):
     email: Optional[str] = None
     location: Optional[str] = None
     status: Optional[str] = None
+    cv_url: Optional[str] = None
 
 class ProfileResponse(ProfileBase):
     id: int
