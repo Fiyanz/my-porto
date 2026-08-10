@@ -1,12 +1,12 @@
 import ProjectList from './ProjectList';
 
+export const dynamic = 'force-dynamic';
 async function getProjects() {
   try {
     const res = await fetch('http://server:8000/projects/', { 
       next: { revalidate: 0 } // no cache for now, so we see DB changes immediately
     });
     if (!res.ok) {
-      console.error("Failed to fetch projects");
       return [];
     }
     const data = await res.json();
@@ -15,7 +15,6 @@ async function getProjects() {
       tags: p.technologies || []
     }));
   } catch (err) {
-    console.error("Error fetching projects:", err);
     return [];
   }
 }

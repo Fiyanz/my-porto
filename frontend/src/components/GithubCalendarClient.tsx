@@ -18,11 +18,9 @@ export default function GithubCalendarClient({ username }: { username: string })
       <GitHubCalendar 
         username={username} 
         colorScheme="light"
-        blockSize={11}
-        blockMargin={4}
-        fontSize={12}
-        hideTotalCount
-        hideColorLegend
+        blockSize={15}
+        blockMargin={5}
+        fontSize={14}
       />
     </div>
   );

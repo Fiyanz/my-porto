@@ -27,7 +27,6 @@ export default function AvatarUploadModal({ imageSrc, onClose, onCropComplete }:
         onCropComplete(croppedImage);
       }
     } catch (e) {
-      console.error(e);
       alert('Error cropping image');
     } finally {
       setIsProcessing(false);

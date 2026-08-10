@@ -4,12 +4,12 @@ A modern, responsive personal portfolio web application built with **Next.js** (
 
 ## Architecture
 
-The project is structured as a monorepo with the following services:
+The project is structured as a monolith repository (monorepo) ready for deployment on platforms like **Render**:
 
 - **Frontend (`/frontend`)**: Built with **Next.js 15 (App Router)** and styled using **Tailwind CSS**. It provides an interactive UI, including a simulated "Kitty" terminal.
 - **Backend (`/server`)**: A robust REST API powered by **FastAPI (Python)** using `uv` as the package manager and **SQLAlchemy** for database ORM.
-- **Database**: **PostgreSQL 15** for persistent storage.
-- **Proxy (`/nginx`)**: **Nginx** acts as a reverse proxy, seamlessly routing traffic between the frontend and the backend API.
+- **Database**: **Supabase (PostgreSQL 15)** is used as the primary database, utilizing the Supabase Connection Pooler for IPv4 compatibility.
+- **Proxy (`/nginx`)**: **Nginx** acts as a reverse proxy, seamlessly routing traffic between the frontend and the backend API during local development.
 
 ## Features
 
@@ -25,6 +25,7 @@ The project is structured as a monorepo with the following services:
 Ensure you have the following installed on your machine:
 - [Docker](https://docs.docker.com/get-docker/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
+- [uv](https://github.com/astral-sh/uv) (for local Python backend development)
 
 ### Installation & Setup
 
@@ -39,8 +40,20 @@ Ensure you have the following installed on your machine:
    ```bash
    cp .env.example .env
    ```
+   **Important for Supabase:** Ensure your `DATABASE_URL` in `.env` uses the Supabase Connection Pooler (port `6543`) to support IPv4. Also, URL-encode any special characters in your password (e.g., `@` becomes `%40`).
 
-3. **Start the application:**
+3. **Database Migration & Seeding:**
+   Before running the app, initialize the Supabase database. Ensure your machine can connect to the Supabase pooler, then run:
+   ```bash
+   cd server
+   uv venv
+   source .venv/bin/activate
+   uv sync
+   uv run alembic upgrade head
+   uv run python seed.py
+   ```
+
+4. **Start the application:**
    Use Docker Compose to build and start all the services:
    ```bash
    docker-compose up --build -d
@@ -55,15 +68,6 @@ Once the containers are up and running, you can access the services at the follo
 - **Frontend (Direct)**: [http://localhost:3001](http://localhost:3001)
 - **Backend API (Direct)**: [http://localhost:8001](http://localhost:8001)
 - **API Documentation (Swagger UI)**: [http://localhost:8001/docs](http://localhost:8001/docs)
-
-### Database Access
-
-The PostgreSQL database is mapped to host port `15432` to avoid conflicts with local database installations. 
-- **Host**: `localhost`
-- **Port**: `15432`
-- **User**: `postgres` (or value in `.env`)
-- **Password**: `postgres` (or value in `.env`)
-- **Database**: `portfolio` (or value in `.env`)
 
 ## Development
 
@@ -81,7 +85,7 @@ To develop the backend locally (without Docker):
 cd server
 uv venv
 source .venv/bin/activate
-uv pip install -r pyproject.toml
+uv sync
 uv run uvicorn app.main:app --reload
 ```
 

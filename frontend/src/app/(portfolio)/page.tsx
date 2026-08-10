@@ -1,6 +1,8 @@
 import GithubCalendarClient from '@/components/GithubCalendarClient';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 async function getGithubStats() {
   try {
     const res = await fetch('http://server:8000/github/stats', {
@@ -9,7 +11,6 @@ async function getGithubStats() {
     if (!res.ok) return null;
     return res.json();
   } catch (err) {
-    console.error("Error fetching github stats:", err);
     return null;
   }
 }
@@ -159,9 +160,9 @@ export default async function Home() {
 
       <div id="project-cards" className="grid grid-cols-3 gap-4 mb-5">
         {(allProjects?.length > 0 ? allProjects.slice(0, 3) : [
-          { id: 1, title: 'Red Chili Pest Detection', icon: 'fa-seedling', description: 'TensorFlow + MLflow + Docker pipeline for real-time crop pest classification.', technologies: 'TensorFlow, MLflow, Docker', link: '#' },
-          { id: 2, title: 'FastAPI E-commerce System', icon: 'fa-cart-shopping', description: 'Full-featured REST API with auth, payments, and product management.', technologies: 'FastAPI, PostgreSQL, Redis', link: '#' },
-          { id: 3, title: 'SightAssist ESP32-C3', icon: 'fa-eye', description: 'Embedded assistive device for visually impaired using computer vision + ultrasonic sensors.', technologies: 'ESP32-C3, MicroPython, MQTT', link: '#' },
+          { id: 1, title: 'Red Chili Pest Detection', icon: 'fa-seedling', description: 'TensorFlow + MLflow + Docker pipeline for real-time crop pest classification.', technologies: ['TensorFlow', 'MLflow', 'Docker'], link: '#' },
+          { id: 2, title: 'FastAPI E-commerce System', icon: 'fa-cart-shopping', description: 'Full-featured REST API with auth, payments, and product management.', technologies: ['FastAPI', 'PostgreSQL', 'Redis'], link: '#' },
+          { id: 3, title: 'SightAssist ESP32-C3', icon: 'fa-eye', description: 'Embedded assistive device for visually impaired using computer vision + ultrasonic sensors.', technologies: ['ESP32-C3', 'MicroPython', 'MQTT'], link: '#' },
         ]).map((proj: any) => (
           <div key={proj.id} className="border-2 border-black rounded-2xl bg-white p-4 flex flex-col">
             <div className="flex items-center justify-between mb-3">

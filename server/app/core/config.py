@@ -6,7 +6,14 @@ class Settings(BaseSettings):
     SECRET_KEY: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
 
+    # Supabase Configuration
+    SUPABASE_URL: str | None = None
+    SUPABASE_PUBLISHABLE_KEY: str | None = None
+    SUPABASE_SECRET_KEY: str | None = None
+    SUPABASE_JWKS_URL: str | None = None
+
     class Config:
-        env_file = ".env"
+        env_file = [".env", "../.env"]
+        extra = "ignore"
 
 settings = Settings()

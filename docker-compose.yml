@@ -20,7 +20,7 @@ services:
     volumes:
       - ./server:/app
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-portfolio}
+      - DATABASE_URL=${DATABASE_URL}
       - SECRET_KEY=${SECRET_KEY:-supersecretkey}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
     ports:

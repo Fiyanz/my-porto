@@ -1,17 +1,16 @@
 import React from 'react';
 
+export const dynamic = 'force-dynamic';
 async function getExperiences() {
   try {
     const res = await fetch('http://server:8000/experiences/', { 
       next: { revalidate: 0 } 
     });
     if (!res.ok) {
-      console.error("Failed to fetch experiences");
       return [];
     }
     return await res.json();
   } catch (err) {
-    console.error("Error fetching experiences:", err);
     return [];
   }
 }

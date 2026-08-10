@@ -48,7 +48,6 @@ export default function Contact() {
       }, 5000);
       
     } catch (err) {
-      console.error(err);
       setStatus(<span className="text-red-500">✗ Failed to send. Please try again.</span>);
     } finally {
       setIsSending(false);

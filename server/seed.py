@@ -205,7 +205,7 @@ async def seed():
         # Seed admin user
         db.query(User).delete()
         admin_user = User(
-            email="admin@portfolio.local",
+            email="bagusalfiyanyusuf@gmail.com",
             hashed_password=get_password_hash("admin123"),
             is_active=True,
             is_superuser=True
@@ -219,7 +219,7 @@ async def seed():
             title="CS Student · ML Engineer · Backend Dev",
             bio="Undergraduate CS student who builds end-to-end systems — from ML models to microcontrollers.",
             github_url="https://github.com/Fiyanz",
-            email="bagus@example.com",
+            email="bagusalfiyanyusuf@gmail.com",
             location="Bandung, Indonesia",
             status="Available for Internship"
         )
