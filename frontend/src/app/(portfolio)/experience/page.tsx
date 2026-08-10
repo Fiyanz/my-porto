@@ -3,7 +3,7 @@ import React from 'react';
 export const dynamic = 'force-dynamic';
 async function getExperiences() {
   try {
-    const res = await fetch('http://server:8000/experiences/', { 
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://server:8000'}/experiences/`, { 
       next: { revalidate: 0 } 
     });
     if (!res.ok) {

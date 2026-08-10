@@ -3,7 +3,7 @@ import ProjectList from './ProjectList';
 export const dynamic = 'force-dynamic';
 async function getProjects() {
   try {
-    const res = await fetch('http://server:8000/projects/', { 
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://server:8000'}/projects/`, { 
       next: { revalidate: 0 } // no cache for now, so we see DB changes immediately
     });
     if (!res.ok) {
