@@ -36,7 +36,6 @@ export default function AdminLogin() {
       setToken(data.access_token);
       window.location.href = '/admin';
     } catch (err: any) {
-      alert(`Debug: ${err.message}`);
       setError(err.message || 'Login failed');
     } finally {
       setLoading(false);
