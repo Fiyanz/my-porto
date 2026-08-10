@@ -6,7 +6,7 @@ from sqlalchemy import desc
 from app.db.session import get_db
 from app.models.certificate import Certificate
 from app.schemas.certificate import CertificateCreate, CertificateUpdate, CertificateResponse
-from app.core.security import get_current_user
+from app.core.deps import get_current_user
 
 router = APIRouter()
 
