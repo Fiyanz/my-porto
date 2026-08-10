@@ -165,39 +165,6 @@ export default async function Skills() {
         })}
       </div>
 
-      <h2 className="text-xl font-black mb-3">Certifications & Bootcamps</h2>
-      <div className="grid grid-cols-3 gap-4">
-        <div className="border-2 border-black bg-white p-4 flex items-start gap-3">
-          <div className="w-9 h-9 bg-gray-200 border-2 border-black flex items-center justify-center shrink-0">
-            <i className="fa-solid fa-certificate text-sm"></i>
-          </div>
-          <div>
-            <div className="font-black text-sm">AI/ML Bootcamp</div>
-            <div className="text-xs text-gray-500 mt-0.5">Agrikultur domain · TensorFlow · Scikit-learn</div>
-            <div className="text-xs font-mono text-gray-400 mt-1.5 border border-gray-200 px-2 py-0.5 inline-block">2024</div>
-          </div>
-        </div>
-        <div className="border-2 border-black bg-white p-4 flex items-start gap-3">
-          <div className="w-9 h-9 bg-gray-200 border-2 border-black flex items-center justify-center shrink-0">
-            <i className="fa-solid fa-certificate text-sm"></i>
-          </div>
-          <div>
-            <div className="font-black text-sm">Backend Engineering</div>
-            <div className="text-xs text-gray-500 mt-0.5">FastAPI · PostgreSQL · System Design</div>
-            <div className="text-xs font-mono text-gray-400 mt-1.5 border border-gray-200 px-2 py-0.5 inline-block">2023</div>
-          </div>
-        </div>
-        <div className="border-2 border-black bg-white p-4 flex items-start gap-3">
-          <div className="w-9 h-9 bg-gray-200 border-2 border-black flex items-center justify-center shrink-0">
-            <i className="fa-solid fa-graduation-cap text-sm"></i>
-          </div>
-          <div>
-            <div className="font-black text-sm">Computer Science — S1</div>
-            <div className="text-xs text-gray-500 mt-0.5">6th Semester · Active Student</div>
-            <div className="text-xs font-mono text-gray-400 mt-1.5 border border-gray-200 px-2 py-0.5 inline-block">2022 – now</div>
-          </div>
-        </div>
-      </div>
     </>
   );
 }

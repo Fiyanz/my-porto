@@ -12,6 +12,7 @@ class Profile(Base):
     avatar_url = Column(String, nullable=True)
     github_url = Column(String, nullable=True, default="https://github.com/Fiyanz")
     linkedin_url = Column(String, nullable=True)
+    instagram_url = Column(String, nullable=True)
     email = Column(String, nullable=True, default="bagus@example.com")
     location = Column(String, nullable=True, default="Bandung, Indonesia")
     status = Column(String, nullable=True, default="Available for Internship")

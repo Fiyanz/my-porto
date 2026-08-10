@@ -26,6 +26,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { href: '/admin', icon: 'fa-gauge-high', label: 'Dashboard' },
     { href: '/admin/skills', icon: 'fa-code', label: 'Skills' },
     { href: '/admin/experiences', icon: 'fa-briefcase', label: 'Experience' },
+    { href: '/admin/certificates', icon: 'fa-certificate', label: 'Certificates' },
     { href: '/admin/projects', icon: 'fa-folder-open', label: 'Projects' },
     { href: '/admin/messages', icon: 'fa-envelope', label: 'Messages' },
     { href: '/admin/profile', icon: 'fa-user', label: 'Profile' },

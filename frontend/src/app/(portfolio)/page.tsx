@@ -82,17 +82,16 @@ export default async function Home() {
                   <p className="text-gray-500 text-sm font-medium">{profile?.email || 'your.email@example.com'}</p>
                 </div>
                 <div className="flex gap-2">
-                  {profile?.github_url && (
-                    <a href={profile.github_url} target="_blank" className="w-7 h-7 border-2 border-black rounded-full flex items-center justify-center bg-gray-100 hover:bg-gray-200 cursor-pointer">
-                      <i className="fa-brands fa-github text-xs"></i>
-                    </a>
-                  )}
-                  {profile?.linkedin_url && (
-                    <a href={profile.linkedin_url} target="_blank" className="w-7 h-7 border-2 border-black rounded-full flex items-center justify-center bg-gray-100 hover:bg-gray-200 cursor-pointer">
-                      <i className="fa-brands fa-linkedin text-xs"></i>
-                    </a>
-                  )}
-                  <a href={`mailto:${profile?.email || ''}`} className="w-7 h-7 border-2 border-black rounded-full flex items-center justify-center bg-gray-100 hover:bg-gray-200 cursor-pointer">
+                  <a href={profile?.github_url || "https://github.com/Fiyanz"} target="_blank" className="w-7 h-7 border-2 border-black rounded-full flex items-center justify-center bg-gray-100 hover:bg-gray-200 cursor-pointer text-gray-900 transition-colors">
+                    <i className="fa-brands fa-github text-xs"></i>
+                  </a>
+                  <a href={profile?.linkedin_url || "https://linkedin.com/"} target="_blank" className="w-7 h-7 border-2 border-black rounded-full flex items-center justify-center bg-gray-100 hover:bg-gray-200 cursor-pointer text-gray-900 transition-colors">
+                    <i className="fa-brands fa-linkedin text-xs"></i>
+                  </a>
+                  <a href={profile?.instagram_url || "https://instagram.com/"} target="_blank" className="w-7 h-7 border-2 border-black rounded-full flex items-center justify-center bg-gray-100 hover:bg-gray-200 cursor-pointer text-gray-900 transition-colors">
+                    <i className="fa-brands fa-instagram text-xs"></i>
+                  </a>
+                  <a href={`mailto:${profile?.email || ''}`} className="w-7 h-7 border-2 border-black rounded-full flex items-center justify-center bg-gray-100 hover:bg-gray-200 cursor-pointer text-gray-900 transition-colors">
                     <i className="fa-solid fa-envelope text-xs"></i>
                   </a>
                 </div>

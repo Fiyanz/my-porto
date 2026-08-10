@@ -5,7 +5,7 @@ import AvatarUploadModal from '@/components/AvatarUploadModal';
 
 export default function AdminProfile() {
   const [profile, setProfile] = useState<any>(null);
-  const [form, setForm] = useState({ name: '', title: '', bio: '', avatar_url: '', github_url: '', linkedin_url: '', email: '', location: '', status: '', cv_url: '' });
+  const [form, setForm] = useState({ name: '', title: '', bio: '', avatar_url: '', github_url: '', linkedin_url: '', instagram_url: '', email: '', location: '', status: '', cv_url: '' });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   
@@ -19,7 +19,7 @@ export default function AdminProfile() {
   useEffect(() => {
     adminFetch('/admin/profile').then(r => r.json()).then(p => {
       setProfile(p);
-      setForm({ name: p.name || '', title: p.title || '', bio: p.bio || '', avatar_url: p.avatar_url || '', github_url: p.github_url || '', linkedin_url: p.linkedin_url || '', email: p.email || '', location: p.location || '', status: p.status || '', cv_url: p.cv_url || '' });
+      setForm({ name: p.name || '', title: p.title || '', bio: p.bio || '', avatar_url: p.avatar_url || '', github_url: p.github_url || '', linkedin_url: p.linkedin_url || '', instagram_url: p.instagram_url || '', email: p.email || '', location: p.location || '', status: p.status || '', cv_url: p.cv_url || '' });
     }).catch(() => {});
   }, []);
 
@@ -121,9 +121,10 @@ export default function AdminProfile() {
               <div><label className="text-xs font-bold text-gray-600 block mb-1">Email</label><input value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} className="w-full border-2 border-black bg-gray-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black" /></div>
               <div><label className="text-xs font-bold text-gray-600 block mb-1">Location</label><input value={form.location} onChange={e => setForm({ ...form, location: e.target.value })} className="w-full border-2 border-black bg-gray-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black" /></div>
             </div>
-            <div className="grid grid-cols-2 gap-3 mb-3">
+            <div className="grid grid-cols-3 gap-3 mb-3">
               <div><label className="text-xs font-bold text-gray-600 block mb-1">GitHub URL</label><input value={form.github_url} onChange={e => setForm({ ...form, github_url: e.target.value })} className="w-full border-2 border-black bg-gray-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black" /></div>
               <div><label className="text-xs font-bold text-gray-600 block mb-1">LinkedIn URL</label><input value={form.linkedin_url} onChange={e => setForm({ ...form, linkedin_url: e.target.value })} className="w-full border-2 border-black bg-gray-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black" /></div>
+              <div><label className="text-xs font-bold text-gray-600 block mb-1">Instagram URL</label><input value={form.instagram_url} onChange={e => setForm({ ...form, instagram_url: e.target.value })} className="w-full border-2 border-black bg-gray-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black" /></div>
             </div>
 
             <div className="grid grid-cols-2 gap-3 mb-4">

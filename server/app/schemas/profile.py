@@ -9,6 +9,7 @@ class ProfileBase(BaseModel):
     avatar_url: Optional[str] = None
     github_url: Optional[str] = None
     linkedin_url: Optional[str] = None
+    instagram_url: Optional[str] = None
     email: Optional[str] = None
     location: Optional[str] = None
     status: Optional[str] = None
@@ -21,6 +22,7 @@ class ProfileUpdate(BaseModel):
     avatar_url: Optional[str] = None
     github_url: Optional[str] = None
     linkedin_url: Optional[str] = None
+    instagram_url: Optional[str] = None
     email: Optional[str] = None
     location: Optional[str] = None
     status: Optional[str] = None
