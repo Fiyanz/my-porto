@@ -74,7 +74,7 @@ export default async function Skills() {
       </div>
 
       {/* TOP ROW: Proficiency Radar + Top Languages */}
-      <div className="grid grid-cols-3 gap-4 mb-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
         <div id="proficiency-card" className="col-span-2 border-2 border-black bg-white p-5">
           <h3 className="font-black text-sm mb-4 flex items-center gap-2">
             <i className="fa-solid fa-chart-bar text-gray-500"></i> Domain Proficiency
@@ -127,7 +127,7 @@ export default async function Skills() {
       </div>
 
       <h2 className="text-xl font-black mb-3">Technology Stack</h2>
-      <div className="grid grid-cols-3 gap-4 mb-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
         {groupedSkills.map((category) => {
           const primarySkills = category.skills.filter((s: any) => s.is_primary);
           const mostUsedText = primarySkills.length > 0 

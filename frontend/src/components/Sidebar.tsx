@@ -17,7 +17,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside id="sidebar" className={`${isCollapsed ? 'w-20 px-2' : 'w-52 px-4'} border-r-2 border-black bg-white flex flex-col py-6 shrink-0 transition-all duration-300 relative`}>
+    <aside id="sidebar" className={`${isCollapsed ? 'w-20 px-2' : 'w-52 px-4'} hidden md:flex border-r-2 border-black bg-white flex-col py-6 shrink-0 transition-all duration-300 relative`}>
       
       <button 
         onClick={() => setIsCollapsed(!isCollapsed)}

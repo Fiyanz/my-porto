@@ -25,8 +25,8 @@ export default function Topbar() {
 
   return (
     <header id="topbar" className="flex items-center justify-end mb-6">
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2 border-2 border-black rounded-lg px-3 py-1.5 bg-white w-56">
+      <div className="flex items-center gap-2 md:gap-3">
+        <div className="flex items-center gap-2 border-2 border-black rounded-lg px-3 py-1.5 bg-white w-40 md:w-56">
           <i className="fa-solid fa-magnifying-glass text-gray-400 text-xs"></i>
           <input type="text" placeholder="Search projects, skills…" className="text-xs text-gray-700 outline-none w-full bg-transparent" />
         </div>

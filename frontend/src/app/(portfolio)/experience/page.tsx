@@ -37,9 +37,9 @@ export default async function Experience() {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* LEFT: Timeline */}
-        <div className="col-span-2 flex flex-col gap-0">
+        <div className="col-span-1 lg:col-span-2 flex flex-col gap-0">
           <h2 className="text-lg font-black mb-4">Timeline</h2>
 
           <div className="timeline-line flex flex-col gap-0 relative">

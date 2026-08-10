@@ -67,10 +67,10 @@ export default function Contact() {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {/* LEFT: Contact form + channels */}
         <div className="col-span-2 flex flex-col gap-4">
-          <div id="channels-row" className="grid grid-cols-2 gap-3">
+          <div id="channels-row" className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="border-2 border-black bg-white p-4 flex items-center gap-3 group cursor-pointer hover:bg-gray-50">
               <div className="w-10 h-10 bg-gray-900 border-2 border-black flex items-center justify-center shrink-0">
                 <i className="fa-brands fa-github text-white text-lg"></i>
@@ -126,7 +126,7 @@ export default function Contact() {
               Send a Message
             </h3>
 
-            <div className="grid grid-cols-2 gap-3 mb-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
               <div>
                 <label className="text-xs font-bold text-gray-600 block mb-1">Name</label>
                 <input 
