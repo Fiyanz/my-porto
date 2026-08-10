@@ -112,7 +112,7 @@ export default async function Home() {
                 </div>
                 <div className="border-2 border-black rounded-xl p-2 text-center bg-gray-100">
                   <div className="text-lg font-black">5</div>
-                  <div className="text-xs text-gray-500 leading-tight">Domains</div>
+                  <div className="text-xs text-gray-500 leading-tight">Focus Areas</div>
                 </div>
               </div>
 
@@ -135,7 +135,7 @@ export default async function Home() {
         </div>
 
         <div id="domains-card" className="border-2 border-black rounded-2xl bg-white p-4 flex flex-col gap-3 h-full">
-          <h3 className="font-black text-sm uppercase tracking-wider text-gray-400">Domains</h3>
+          <h3 className="font-black text-sm uppercase tracking-wider text-gray-400">Core Expertise</h3>
           <div className="flex flex-wrap lg:flex-col gap-2">
             {[
               { name: 'Machine Learning', icon: 'fa-brain' },
