@@ -1,11 +1,27 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: "Inter", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 }
 
 @layer base {
+  .dark {
+    --color-white: #21252b;
+    --color-gray-50: #282c34;
+    --color-gray-100: #2c313a;
+    --color-gray-200: #3e4451;
+    --color-gray-400: #5c6370;
+    --color-gray-500: #abb2bf;
+    --color-gray-600: #abb2bf;
+    --color-gray-700: #c8ccd4;
+    --color-gray-800: #abb2bf;
+    --color-gray-900: #ffffff;
+    --color-black: #181a1f;
+  }
+
   * {
     border-radius: 0 !important;
   }

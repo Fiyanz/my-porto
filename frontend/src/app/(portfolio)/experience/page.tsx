@@ -1,9 +1,9 @@
-import React from 'react';
+import { getServerApiUrl } from '@/lib/api';
 
 export const dynamic = 'force-dynamic';
 async function getExperiences() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://server:8000'}/experiences/`, { 
+    const res = await fetch(`${getServerApiUrl()}/experiences/`, {  
       next: { revalidate: 0 } 
     });
     if (!res.ok) {
@@ -57,7 +57,7 @@ export default async function Experience() {
               return (
                 <div key={exp.id} className={`flex gap-4 relative z-10 ${!isLast ? 'pb-6' : ''}`}>
                   <div className={`w-10 h-10 ${exp.icon_bg} border-2 border-black flex items-center justify-center shrink-0 z-10`}>
-                    <i className={`fa-solid ${exp.icon} ${exp.icon_bg.includes('white') ? 'text-black' : 'text-white'} text-sm`}></i>
+                    <i className={`fa-solid ${exp.icon} ${exp.icon_bg.includes('white') ? 'text-gray-900' : 'text-white'} text-sm`}></i>
                   </div>
                   <div className="flex-1 border-2 border-black bg-white p-4">
                     <div className="flex items-start justify-between mb-2">
@@ -66,7 +66,7 @@ export default async function Experience() {
                         <p className="text-xs text-gray-500 font-medium">{exp.institution}</p>
                       </div>
                       <div className="flex flex-col items-end gap-1">
-                        <span className={`text-xs border-2 border-black px-2 py-0.5 font-bold mono ${isCurrent ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
+                        <span className={`text-xs border-2 border-black px-2 py-0.5 font-bold mono ${isCurrent ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
                           {exp.status}
                         </span>
                         <span className="text-xs text-gray-400 mono">{exp.time_range}</span>

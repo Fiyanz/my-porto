@@ -1,11 +1,12 @@
 import GithubCalendarClient from '@/components/GithubCalendarClient';
 import Link from 'next/link';
+import { getServerApiUrl } from '@/lib/api';
 
 export const dynamic = 'force-dynamic';
 
 async function getGithubStats() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://server:8000'}/github/stats`, {
+    const res = await fetch(`${getServerApiUrl()}/github/stats`, {
       next: { revalidate: 3600 }
     });
     if (!res.ok) return null;
@@ -17,7 +18,7 @@ async function getGithubStats() {
 
 async function getProfile() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://server:8000'}/admin/profile`, { cache: 'no-store' });
+    const res = await fetch(`${getServerApiUrl()}/admin/profile`, { cache: 'no-store' });
     if (!res.ok) return null;
     return res.json();
   } catch {
@@ -27,7 +28,7 @@ async function getProfile() {
 
 async function getSkills() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://server:8000'}/skills/`, { cache: 'no-store' });
+    const res = await fetch(`${getServerApiUrl()}/skills/`, { cache: 'no-store' });
     if (!res.ok) return [];
     return res.json();
   } catch {
@@ -37,7 +38,7 @@ async function getSkills() {
 
 async function getProjects() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://server:8000'}/projects/`, { cache: 'no-store' });
+    const res = await fetch(`${getServerApiUrl()}/projects/`, { cache: 'no-store' });
     if (!res.ok) return [];
     return res.json();
   } catch {
