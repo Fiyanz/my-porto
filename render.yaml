@@ -4,9 +4,10 @@ services:
   # ------------------------------------
   - type: web
     name: portofolio-backend
-    env: docker
-    dockerContext: ./server
-    dockerfilePath: ./server/Dockerfile
+    env: python
+    rootDir: ./server
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port 10000
     plan: free # Use free tier
     envVars:
       - key: DATABASE_URL
