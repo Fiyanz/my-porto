@@ -51,3 +51,10 @@ MANIFEST
 
 # Docker
 .docker/
+
+# Custom Ignore (IDE / Tools)
+.kilocode/
+.kilocode
+.qwen/
+.qwen
+skills-lock.json
