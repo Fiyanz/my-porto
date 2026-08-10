@@ -14,14 +14,16 @@ export default function GithubCalendarClient({ username }: { username: string })
   }
 
   return (
-    <div className="w-full overflow-hidden flex justify-center py-2">
-      <GitHubCalendar 
-        username={username} 
-        colorScheme="light"
-        blockSize={15}
-        blockMargin={5}
-        fontSize={14}
-      />
+    <div className="w-full overflow-x-auto overflow-y-hidden py-4 flex justify-start lg:justify-center">
+      <div className="min-w-fit">
+        <GitHubCalendar 
+          username={username} 
+          colorScheme="light"
+          blockSize={12}
+          blockMargin={4}
+          fontSize={12}
+        />
+      </div>
     </div>
   );
 }
