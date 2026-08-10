@@ -12,6 +12,7 @@ export default function Sidebar() {
     { href: '/projects', icon: 'fa-folder-open', label: 'Projects' },
     { href: '/skills', icon: 'fa-code', label: 'Skills' },
     { href: '/experience', icon: 'fa-briefcase', label: 'Experience' },
+    { href: '/certificates', icon: 'fa-certificate', label: 'Certificates' },
     { href: '/contact', icon: 'fa-envelope', label: 'Contact' },
   ];
 

@@ -11,19 +11,8 @@ async function getExperiences() {
   }
 }
 
-async function getCertificates() {
-  try {
-    const res = await fetch(`${getServerApiUrl()}/certificates/`, { next: { revalidate: 0 } });
-    if (!res.ok) return [];
-    return await res.json();
-  } catch (err) {
-    return [];
-  }
-}
-
 export default async function Experience() {
   const experiences = await getExperiences();
-  const certificates = await getCertificates();
 
   return (
     <>
@@ -199,37 +188,6 @@ export default async function Experience() {
           </div>
         </div>
       </div>
-
-      {certificates.length > 0 && (
-        <div className="mt-10">
-          <h2 className="text-xl font-black mb-4 flex items-center gap-2">
-            <i className="fa-solid fa-certificate text-gray-800"></i> Certifications & Bootcamps
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {certificates.map((cert: any) => (
-              <div key={cert.id} className="border-2 border-black bg-white p-4 flex items-start gap-3">
-                <div className="w-9 h-9 bg-gray-200 border-2 border-black flex items-center justify-center shrink-0">
-                  <i className={`fa-solid ${cert.icon || 'fa-certificate'} text-sm`}></i>
-                </div>
-                <div>
-                  <div className="font-black text-sm">{cert.title}</div>
-                  <div className="text-xs text-gray-500 mt-0.5">{cert.issuer}</div>
-                  {cert.date && (
-                    <div className="text-xs font-mono text-gray-400 mt-1.5 border border-gray-200 px-2 py-0.5 inline-block">
-                      {cert.date}
-                    </div>
-                  )}
-                  {cert.credential_url && (
-                    <a href={cert.credential_url} target="_blank" rel="noopener noreferrer" className="block mt-2 text-xs font-bold underline hover:text-gray-500">
-                      View Credential <i className="fa-solid fa-arrow-up-right-from-square ml-1"></i>
-                    </a>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </>
   );
 }
