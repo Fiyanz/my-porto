@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.routers import auth, projects, blog, contact, github, skills, experiences, admin, files, certificates
+from app.routers import auth, projects, blog, contact, github, skills, experiences, admin, files, certificates, learning
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
@@ -21,6 +21,7 @@ app.include_router(github.router, prefix="/github", tags=["github"])
 app.include_router(skills.router, prefix="/skills", tags=["skills"])
 app.include_router(experiences.router, prefix="/experiences", tags=["experiences"])
 app.include_router(certificates.router, prefix="/certificates", tags=["certificates"])
+app.include_router(learning.router, prefix="/learning", tags=["learning"])
 app.include_router(admin.router, tags=["admin"])
 app.include_router(files.router)
 

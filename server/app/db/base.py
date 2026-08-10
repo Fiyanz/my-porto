@@ -9,3 +9,4 @@ from app.models.project import Project
 from app.models.post import Post
 from app.models.contact import Contact
 from app.models.certificate import Certificate
+from app.models.learning import Learning

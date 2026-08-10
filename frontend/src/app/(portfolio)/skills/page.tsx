@@ -4,12 +4,18 @@ import { getServerApiUrl } from '@/lib/api';
 export const dynamic = 'force-dynamic';
 async function getSkills() {
   try {
-    const res = await fetch(`${getServerApiUrl()}/skills/`, { 
-      next: { revalidate: 0 } 
-    });
-    if (!res.ok) {
-      return [];
-    }
+    const res = await fetch(`${getServerApiUrl()}/skills/`, { next: { revalidate: 0 } });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch (err) {
+    return [];
+  }
+}
+
+async function getLearning() {
+  try {
+    const res = await fetch(`${getServerApiUrl()}/learning/`, { next: { revalidate: 0 } });
+    if (!res.ok) return [];
     return await res.json();
   } catch (err) {
     return [];
@@ -17,7 +23,10 @@ async function getSkills() {
 }
 
 export default async function Skills() {
-  const skills = await getSkills();
+  const [skills, learningItems] = await Promise.all([
+    getSkills(),
+    getLearning()
+  ]);
 
   // Group skills by category
   const categories = [
@@ -102,26 +111,19 @@ export default async function Skills() {
             <i className="fa-solid fa-bolt text-gray-500"></i> Currently Learning
           </h3>
           <div className="flex flex-col gap-2">
-            <div className="border-2 border-black p-3 bg-gray-50">
-              <div className="text-xs font-black mb-0.5">Rust</div>
-              <div className="text-xs text-gray-500">Systems + WASM targets</div>
-              <div className="w-full h-1.5 bg-gray-200 mt-2"><div className="h-full bg-gray-600" style={{ width: '30%' }}></div></div>
-            </div>
-            <div className="border-2 border-black p-3 bg-gray-50">
-              <div className="text-xs font-black mb-0.5">Kubernetes</div>
-              <div className="text-xs text-gray-500">Orchestrating ML pipelines</div>
-              <div className="w-full h-1.5 bg-gray-200 mt-2"><div className="h-full bg-gray-600" style={{ width: '45%' }}></div></div>
-            </div>
-            <div className="border-2 border-black p-3 bg-gray-50">
-              <div className="text-xs font-black mb-0.5">LangChain</div>
-              <div className="text-xs text-gray-500">RAG + agent pipelines</div>
-              <div className="w-full h-1.5 bg-gray-200 mt-2"><div className="h-full bg-gray-600" style={{ width: '55%' }}></div></div>
-            </div>
-            <div className="border-2 border-black p-3 bg-gray-50">
-              <div className="text-xs font-black mb-0.5">eBPF</div>
-              <div className="text-xs text-gray-500">Linux observability</div>
-              <div className="w-full h-1.5 bg-gray-200 mt-2"><div className="h-full bg-gray-600" style={{ width: '20%' }}></div></div>
-            </div>
+            {learningItems.length > 0 ? learningItems.map((item: any) => (
+              <div key={item.id} className="border-2 border-black p-3 bg-gray-50">
+                <div className="text-xs font-black mb-0.5">{item.title}</div>
+                {item.description && <div className="text-xs text-gray-500">{item.description}</div>}
+                <div className="w-full h-1.5 bg-gray-200 mt-2">
+                  <div className="h-full bg-gray-600 transition-all duration-500" style={{ width: `${item.progress}%` }}></div>
+                </div>
+              </div>
+            )) : (
+              <div className="text-xs text-gray-500 p-3 border-2 border-dashed border-gray-300 text-center bg-gray-50">
+                No items added yet. Add some in the Admin panel!
+              </div>
+            )}
           </div>
         </div>
       </div>
